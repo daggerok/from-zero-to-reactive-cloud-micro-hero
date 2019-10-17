@@ -1,0 +1,28 @@
+POST http://127.0.0.1:8081/sessions
+Content-Type: application/json
+
+{
+  "name": "Session"
+}
+
+###
+POST http://127.0.0.1:8082/speakers
+Content-Type: application/json
+
+{
+  "name": "Max"
+}
+
+###
+GET http://127.0.0.1:8081/sessions
+
+###
+GET http://127.0.0.1:8082/speakers
+
+###
+GET http://127.0.0.1:8080/
+
+###
+GET http://127.0.0.1:8082/
+
+###

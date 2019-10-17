@@ -1,0 +1,99 @@
+env:
+  global:
+    secure: "Mc+HCf8MmK28kZwaZ7YZox9qAlCP81pLLQVQMCH9yxCwFBUJlxO0+jsimoMhe6K9hi0WE1pS6Qa6+v0GdZ0+FmIlX1sQh5X64NCjCZHY3lcnFoPI8FSspgp0jRNd0Y1DPBWeLsuM2kmw9oaeQ8kqR7RYXLvkEHYfqbip1RkPRzfTJnB9OCdxWGfPrahD5idRyx2dfhw176vGF8h5aeTaajNvLhBGae2OerbEO0S4tf0jGUTVOJSPCJo2tcaCFIUcS+4fgNkqace4vtY7ZgJUstPpG6Ajj5lHFhfjEQrXlsn5Wv5eflvrO8XkXPGGC9Ttbqx/+zOwPxbjlneDEP6QyEfduxOzvLWM6TV8spNbI9z+X+dkRMovl5zgZrY9PzsM/cBcg3GS3rMUVrCHuJWNxcsX6oihKg4Dso8LZrvQXpmG4Ucgq4vbF+pzRI2frzuwW4SoddiKfz2cGrihkso0+nnuWe1a7NzjJzVR1oq6yA5GV4WWFIJT56OJ8Ta4y4dAKbgIhg7YFHfahfvc62B5BElxa9TtBIkud1sLDN2l6VEhso2sFpywQxbNXfLTV7GA4NIGAUPLf4qzBNE1kNkjaX6sdfY6MvzCyfWmui+KgZxRSZeUJ2bboP/0l0vuuDzLUlUUeqom8aGJfuQbXnGhld1vzqtvmc2DSLIEJ1v8V6c="
+notifications:
+  email: false
+git:
+  quiet: true
+  depth: false
+jdk: openjdk11
+node_js: lts/*
+python: 3.7
+matrix:
+  include:
+  - python: 3.7
+services: docker
+addons:
+  apt:
+    update: true
+    packages:
+    - python3-pip
+    - jq
+#    - sudo
+#    - lsof
+#    - curl
+install: true
+before_install:
+- |
+  if [ ! -f ${HOME}/.local/daggerok/bash-functions/master/main.bash ] ; then
+    mkdir -p ${HOME}/.local/daggerok/bash-functions/master ;
+    curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash > ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+  fi
+  source ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+- stop_any 80 8080 9000 8001 8002 8080 5432
+#
+- export PATH=$HOME/.local/bin:$PATH
+- docker-compose version
+- pip install --user --upgrade pip
+- pip install --user --upgrade docker-compose httpie
+- http --version --debug
+- docker-compose version
+jobs:
+  include:
+  - stage: test
+    jdk: openjdk11
+    name: mvn package
+    script: cd $TRAVIS_BUILD_DIR && ./mvnw
+  - stage: test
+    jdk: openjdk11
+    name: step-1 integration tests
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw >/dev/null
+    - java -jar $TRAVIS_BUILD_DIR/step-1/speakers-rest-api-service-step-1/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step-1/sessions-rsocket-service-step-1/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step-1/frontend-step-1/target/*.jar &
+    - wait_for 8082 8081 8080
+    - http :8080
+    - http :8082/actuator/health | jq '.'
+    - http :8081/actuator/health | jq '.'
+    - http :8080/actuator/health | jq '.'
+    - http :8080
+#    - http :8082
+#    - http :8082/speakers name=max | jq '.'
+#    - http :8082/speakers name=bax | jq '.'
+#    - http :8082/speakers | jq '.'
+    - stop_any 8082 8081 8080
+  - stage: test
+    jdk: openjdk11
+    name: versions display-property-updates
+    script: ./mvnw -P versions
+  - stage: test
+    jdk: openjdk11
+    name: npm run build
+    script: ./mvnw -pl :from-zero-to-reactive-cloud-micro-hero -P npm-run-build
+  - stage: deploy
+    jdk: openjdk11
+    name: GitHub Pages
+    script: skip
+    before_deploy:
+    - set -e
+    - mkdir -p ${HOME}/.m2
+    - ./mvnw -pl :from-zero-to-reactive-cloud-micro-hero -P npm-run-gh-pages
+    deploy: &pages
+      provider: pages
+      skip-cleanup: true
+      github-token: "$GITHUB_TOKEN"
+      keep-history: true
+      local-dir: docs/.vuepress/dist
+      target_branch: gh-pages
+      on:
+        branch: master
+        condition: "$TRAVIS_PULL_REQUEST = false"
+cache:
+  npm: true
+  pip: true
+  packages: true
+  directories:
+  - ~/.m2
+  - ~/.local/daggerok
+  - .vuepress/node_modules
