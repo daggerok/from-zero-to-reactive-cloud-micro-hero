@@ -7,28 +7,11 @@
     <name>${project.artifactId}</name>
     <groupId>com.github.daggerok.hero</groupId>
     <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>step1-speakers-rest-api-service</module>
-        <module>step1-sessions-rsocket-service</module>
-        <module>step1-frontend</module>
-
-        <module>step2-docker</module>
-        <module>step2-speakers-rest-api-service</module>
-        <module>step2-sessions-rsocket-service</module>
-        <module>step2-frontend</module>
-
-        <module>step3-postgres-fabric8</module>
-        <module>step3-speakers-rest-api-service-fabric8</module>
-        <module>step3-sessions-rsocket-service-fabric8</module>
-        <module>step3-frontend-fabric8</module>
-
-        <module>step4-all-in-one-fabric8</module>
-        <module>step5-all-in-one-docker-compose</module>
-        <module>step6-all-in-one-google-jib</module>
-        <module>step7-all-in-one-docker-swarm</module>
+        <module>step-1</module>
     </modules>
 
     <developers>
@@ -73,39 +56,17 @@
         <frontend-maven-plugin.nodeVersion>v12.11.1</frontend-maven-plugin.nodeVersion>
 
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
-        <jib-maven-plugin.version>1.7.0</jib-maven-plugin.version>
-        <docker-compose-maven-plugin.version>2.5.1</docker-compose-maven-plugin.version>
-        <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
-        <postgres.image>healthcheck/postgres:alpine</postgres.image>
-        <openjdk.image>openjdk:8u212-jre-alpine</openjdk.image>
-
-        <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
-        <r2dbc-postgresql.version>0.8.0.RC2</r2dbc-postgresql.version>
-        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-
-        <webjars-locator.version>0.38</webjars-locator.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+        <webjars-locator.version>0.37</webjars-locator.version>
         <Semantic-UI.version>2.4.1</Semantic-UI.version>
+        <jquery.version>3.4.1</jquery.version>
         <vavr.version>0.10.2</vavr.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot.experimental</groupId>
-                <artifactId>spring-boot-starter-data-r2dbc</artifactId>
-                <version>${spring-boot-starter-data-r2dbc.version}</version>
-                <type>jar</type>
-            </dependency>
-            <dependency>
-                <groupId>io.r2dbc</groupId>
-                <artifactId>r2dbc-postgresql</artifactId>
-                <version>${r2dbc-postgresql.version}</version>
-                <type>jar</type>
-            </dependency>
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -119,11 +80,15 @@
                 <version>${vavr.version}</version>
                 <type>jar</type>
             </dependency>
-
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>webjars-locator</artifactId>
                 <version>${webjars-locator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery</artifactId>
+                <version>${jquery.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
@@ -181,54 +146,12 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-                    <configuration>
-                        <executable>true</executable>
-                    </configuration>
                     <executions>
-                        <execution>
-                            <id>build-info</id>
-                            <goals><goal>build-info</goal></goals>
-                        </execution>
                         <execution>
                             <id>repackage</id>
                             <goals><goal>repackage</goal></goals>
                         </execution>
                     </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>${docker-maven-plugin.version}</version>
-                    <configuration>
-                        <follow>false</follow>
-                        <verbose>true</verbose>
-                        <useColor>true</useColor>
-                        <logDate>default</logDate>
-                        <autoPull>always</autoPull>
-                        <keepRunning>false</keepRunning>
-                        <watchInterval>500</watchInterval>
-                        <allContainers>true</allContainers>
-                        <removeVolumes>true</removeVolumes>
-                        <imagePullPolicy>IfNotPresent</imagePullPolicy>
-                        <autoCreateCustomNetworks>false</autoCreateCustomNetworks>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>com.dkanejs.maven.plugins</groupId>
-                    <artifactId>docker-compose-maven-plugin</artifactId>
-                    <version>${docker-compose-maven-plugin.version}</version>
-                    <configuration>
-                        <detail>true</detail>
-                        <verbose>false</verbose>
-                        <detachedMode>true</detachedMode>
-                        <ignorePullFailures>true</ignorePullFailures>
-                        <removeImagesType>local</removeImagesType>
-                        <removeImages>true</removeImages>
-                        <removeOrphans>true</removeOrphans>
-                        <removeVolumes>true</removeVolumes>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -316,37 +239,5 @@
             </build>
         </profile>
     </profiles>
-
-    <!-- r2dbc -->
-    <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>
