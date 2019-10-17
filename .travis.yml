@@ -1,0 +1,68 @@
+notifications:
+  email: false
+git:
+  quiet: true
+  depth: false
+jdk: openjdk11
+node_js: lts/*
+python: 3
+matrix:
+  include:
+  - python: 3.7
+addons:
+  apt:
+    update: true
+    packages:
+    - python3-pip
+#    - jq
+#    - sudo
+#    - lsof
+#    - wget
+#    - bash
+#    - curl
+#    - unzip
+install: true
+before_install:
+- |
+  if [ ! -f ${HOME}/.local/daggerok/bash-functions/master/main.bash ] ; then
+    mkdir -p ${HOME}/.local/daggerok/bash-functions/master ;
+    curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash > ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+  fi
+  source ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+- stop_any 80 8080 9000 8001 8002 8080 5432
+jobs:
+  include:
+  - stage: test
+    jdk: openjdk11
+    name: mvn versions:display-property-updates
+    script: ./mvnw versions:display-property-updates
+  - stage: test
+    jdk: openjdk11
+    name: mvn -P npm-run-buld
+    script: ./mvnw -P npm-run-buld
+  - stage: deploy
+    jdk: openjdk8
+    name: GitHub release and GitHub pages deployment (openjdk11)
+    script: skip
+    before_deploy:
+    - set -e
+    - mkdir -p ${HOME}/.m2
+    - ./mvnw -P npm-run-gh-pages
+    deploy: &pages
+      provider: pages
+      skip-cleanup: true
+      github-token: "$GITHUB_TOKEN"
+      keep-history: true
+      local-dir: docs/.vuepress/dist
+      target_branch: gh-pages
+      on:
+        branch: master
+        condition: "$TRAVIS_PULL_REQUEST = false"
+cache:
+  npm: true
+  pip: true
+  packages: true
+  directories:
+  - ~/.m2
+  - ~/.local/daggerok
+  - .vuepress/node_modules

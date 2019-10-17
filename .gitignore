@@ -1,0 +1,12 @@
+.idea
+*.iml
+*.ipr
+*.iws
+*.log*
+.DS_Store
+target/
+build/
+/out/
+**/out/**
+node_modules/
+.vuepress/.vuepress/dist/
