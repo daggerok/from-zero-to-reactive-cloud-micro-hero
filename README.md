@@ -7,15 +7,31 @@ IN PROGRESS
 ## Done
 * Setup Travis CI pipelines
 * Initial draft and implement of VuePress documentation
-* Implement step-1 with sets of spring boot 2.2 reactive applications
+* Implement step1 with sets of spring boot 2.2 reactive applications
 
 ## Road map
-* Replace in-memory map with postgres r2dbc spring data integration
-* Implement step-2 with docker
-* Implement step-3 with docker-compose
-* Implement step-4 with docker-swarm
-* Implement step-5 with k8s
-* Implement step-6 with project riff
+* Implement step2 with replacing in-memory map DBs -> postgres r2dbc spring-data integration
+* Implement step3 with docker
+* Implement step4 with docker-compose
+* Implement step5 with docker-swarm
+* Implement step6 with k8s
+* Implement step7 with project riff
+
+## step1
+Simple sets of applications implementation for local run
+
+```bash
+./mvnw
+
+java -jar step1-speakers-rest-api-service/target/*.jar
+java -jar step1-sessions-rsocket-service/target/*.jar
+java -jar step1-frontend/target/*.jar
+
+#http :8082/speakers name=max
+#http :8082/speakers name=bax
+#http :8082/speakers
+http :8080
+```
 
 ## GitHub Pages
 Documentation is located [here](https://daggerok.github.io/from-zero-to-reactive-cloud-micro-hero/)

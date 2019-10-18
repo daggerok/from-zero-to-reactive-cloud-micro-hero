@@ -17,11 +17,12 @@ addons:
   apt:
     update: true
     packages:
+    - python3-setuptools
     - python3-pip
+    #- sudo
+    #- lsof
+    #- curl
     - jq
-#    - sudo
-#    - lsof
-#    - curl
 install: true
 before_install:
 - |
@@ -34,34 +35,36 @@ before_install:
 #
 - export PATH=$HOME/.local/bin:$PATH
 - docker-compose version
-- pip install --user --upgrade pip
+- pip -V
+- pip3 install --user --upgrade pip
 - pip install --user --upgrade docker-compose httpie
 - http --version --debug
 - docker-compose version
+- pip -V
 jobs:
   include:
   - stage: test
     jdk: openjdk11
-    name: mvn package
+    name: mvn test
     script: cd $TRAVIS_BUILD_DIR && ./mvnw
   - stage: test
     jdk: openjdk11
-    name: step-1 integration tests
+    name: step1 integration tests
     script:
-    - cd $TRAVIS_BUILD_DIR && ./mvnw >/dev/null
-    - java -jar $TRAVIS_BUILD_DIR/step-1/speakers-rest-api-service-step-1/target/*.jar &
-    - java -jar $TRAVIS_BUILD_DIR/step-1/sessions-rsocket-service-step-1/target/*.jar &
-    - java -jar $TRAVIS_BUILD_DIR/step-1/frontend-step-1/target/*.jar &
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -DskipTests >/dev/null
+    - java -jar $TRAVIS_BUILD_DIR/step1-speakers-rest-api-service/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step1-sessions-rsocket-service/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step1-frontend/target/*.jar &
     - wait_for 8082 8081 8080
     - http :8080
     - http :8082/actuator/health | jq '.'
     - http :8081/actuator/health | jq '.'
     - http :8080/actuator/health | jq '.'
     - http :8080
-#    - http :8082
-#    - http :8082/speakers name=max | jq '.'
-#    - http :8082/speakers name=bax | jq '.'
-#    - http :8082/speakers | jq '.'
+    #- http :8082
+    #- http :8082/speakers name=max | jq '.'
+    #- http :8082/speakers name=bax | jq '.'
+    #- http :8082/speakers | jq '.'
     - stop_any 8082 8081 8080
   - stage: test
     jdk: openjdk11
