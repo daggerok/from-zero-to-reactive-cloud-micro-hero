@@ -11,7 +11,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>step-1</module>
+        <module>step1-speakers-rest-api-service</module>
+        <module>step1-sessions-rsocket-service</module>
+        <module>step1-frontend</module>
     </modules>
 
     <developers>
@@ -61,7 +63,6 @@
         <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
         <webjars-locator.version>0.37</webjars-locator.version>
         <Semantic-UI.version>2.4.1</Semantic-UI.version>
-        <jquery.version>3.4.1</jquery.version>
         <vavr.version>0.10.2</vavr.version>
     </properties>
 
