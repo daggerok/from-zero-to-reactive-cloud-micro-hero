@@ -1,7 +1,6 @@
 package com.github.daggerok.hero.frontend;
 
 import io.vavr.Lazy;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,15 +15,11 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.result.view.Rendering;
 import org.springframework.web.server.ServerWebExchange;
-import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
-import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 
 @Log4j2
 @Controller
@@ -40,14 +35,14 @@ public class IndexPage {
                                 .get()
                                 .uri("/speakers")
                                 .exchange()
-                                .retryBackoff(5, Duration.ofSeconds(3)));
+                                .retryBackoff(2, Duration.ofSeconds(3)));
 
     private final Lazy<Mono<RSocketRequester>> sessions;
 
     public IndexPage(RSocketRequester.Builder builder) {
         sessions = Lazy.of(() -> builder.dataMimeType(MediaType.APPLICATION_JSON)
                                         .connectWebSocket(URI.create("http://127.0.0.1:8081"))
-                                        .cache()
+                                        // .cache()
                                         .retryBackoff(5, Duration.ofSeconds(3)));
     }
 
