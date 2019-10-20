@@ -1,11 +1,11 @@
-package com.github.daggerok.hero.rsocket;
+package com.github.daggerok.hero.frontend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SessionsRSocketApplication {
+public class Frontend2Application {
     public static void main(String[] args) {
-        SpringApplication.run(SessionsRSocketApplication.class, args);
+        SpringApplication.run(Frontend2Application.class, args);
     }
 }
