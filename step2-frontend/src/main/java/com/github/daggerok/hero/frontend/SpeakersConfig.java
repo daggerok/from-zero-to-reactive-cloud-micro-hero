@@ -1,6 +1,5 @@
 package com.github.daggerok.hero.frontend;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -13,9 +12,9 @@ import java.time.Duration;
 public class SpeakersConfig {
 
     @Bean
-    WebClient client(@Value("${speakers.port}") Integer speakersPort) {
+    WebClient client(SpeakersProps props) {
         return WebClient.builder()
-                        .baseUrl(String.format("http://127.0.0.1:%d", speakersPort))
+                        .baseUrl(String.format("http://127.0.0.1:%d", props.getPort()))
                         .build();
     }
 

@@ -6,8 +6,9 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 ## what?
 * Configured Travis CI pipelines
 * Initialized draft and implement of VuePress documentation
-* Implemented step1 with sets of spring boot 2.2.0.RELEASE reactive applications
-* Implemented step2 with replacing in-memory map DBs ->  r2dbc-postgres (in docker) spring-data integration
+* Implemented step1 with sets of spring boot 2.2.o.RELEASE reactive applications
+* Implemented step2 with replacing in-memory map DBs -> r2dbc-postgres spring-data integration (run pg in docker)
+* Implemented step3 and Dockerize all applications using fabric8.io maven plugin
 
 ## step1
 Simple sets of applications implementation for local run
@@ -26,7 +27,7 @@ http :8080
 ```
 
 ## step2
-Simple sets of r2dbc applications with docker postgres
+Simple sets of r2dbc applications with postgres (in docker)
 
 ```bash
 ./mvnw -pl :step2-docker docker:start
@@ -48,4 +49,19 @@ http :8083
 
 ./mvnw -pl :step2-docker docker:stop
 #docker rm -f -v pg
+```
+
+## step3
+Aun applications in docker using fabric8.io maven plugin
+
+```bash
+./mvnw -pl :step3-postgres docker:build docker:start
+./mvnw -pl :step3-sessions-rsocket-service,:step3-speakers-rest-api-service,:step3-frontend clean package docker:build docker:start
+
+#http :8085/speakers name=max
+#http :8084/sessions name=maximum speakers=max
+http :8083
+
+./mvnw -pl :step3-speakers-rest-api-service,:step3-sessions-rsocket-service,:step3-frontend docker:stop docker:remove
+./mvnw -f step3-postgres/ docker:stop docker:remove
 ```

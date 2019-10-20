@@ -18,7 +18,7 @@
     <properties>
         <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
         <!-- docker postgres -->
-        <postgres.docker.name>healthcheck/postgres:alpine</postgres.docker.name>
+        <postgres.docker.name>${postgres.image}</postgres.docker.name>
         <postgres.docker.log.prefix>postgres</postgres.docker.log.prefix>
         <postgres.docker.ports.1>5432:5432</postgres.docker.ports.1>
         <postgres.docker.env.POSTGRES_DB>postgres</postgres.docker.env.POSTGRES_DB>
@@ -32,30 +32,20 @@
         <plugins>
             <!-- postgres in docker:
                 ./mvnw -pl :step2-docker docker:start
+                ...do some testing...
                 ./mvnw -pl :step2-docker docker:stop
             -->
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>${docker-maven-plugin.version}</version>
                 <configuration>
-                    <follow>false</follow>
-                    <verbose>true</verbose>
-                    <useColor>true</useColor>
-                    <logDate>default</logDate>
-                    <autoPull>always</autoPull>
-                    <keepRunning>false</keepRunning>
-                    <watchInterval>500</watchInterval>
-                    <allContainers>true</allContainers>
-                    <removeVolumes>true</removeVolumes>
-                    <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
                     <images>
                         <image>
                             <external>
                                 <type>properties</type>
                                 <prefix>postgres.docker</prefix>
                             </external>
-                            <run><!-- run block is optional... -->
+                            <run>
                                 <restartPolicy>
                                     <name>always</name>
                                 </restartPolicy>
