@@ -19,6 +19,11 @@
         <module>step2-speakers-rest-api-service</module>
         <module>step2-sessions-rsocket-service</module>
         <module>step2-frontend</module>
+
+        <module>step3-postgres</module>
+        <module>step3-speakers-rest-api-service</module>
+        <module>step3-sessions-rsocket-service</module>
+        <module>step3-frontend</module>
     </modules>
 
     <developers>
@@ -65,10 +70,14 @@
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
+        <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
+        <postgres.image>healthcheck/postgres:alpine</postgres.image>
+        <openjdk.image>openjdk:8u212-jre-alpine</openjdk.image>
+
         <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
         <r2dbc-postgresql.version>0.8.0.RC2</r2dbc-postgresql.version>
-
         <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+
         <webjars-locator.version>0.37</webjars-locator.version>
         <Semantic-UI.version>2.4.1</Semantic-UI.version>
         <vavr.version>0.10.2</vavr.version>
@@ -177,6 +186,25 @@
                             <goals><goal>repackage</goal></goals>
                         </execution>
                     </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker-maven-plugin.version}</version>
+                    <configuration>
+                        <follow>false</follow>
+                        <verbose>true</verbose>
+                        <useColor>true</useColor>
+                        <logDate>default</logDate>
+                        <autoPull>always</autoPull>
+                        <autoRemove>true</autoRemove>
+                        <keepRunning>false</keepRunning>
+                        <watchInterval>500</watchInterval>
+                        <allContainers>true</allContainers>
+                        <removeVolumes>true</removeVolumes>
+                        <autoCreateCustomNetworks>false</autoCreateCustomNetworks>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

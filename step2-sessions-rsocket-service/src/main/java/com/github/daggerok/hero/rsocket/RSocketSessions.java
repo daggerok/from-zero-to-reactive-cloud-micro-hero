@@ -33,7 +33,7 @@ public class RSocketSessions {
     @PostMapping("/sessions")
     public Mono<Integer> save(@RequestBody Session session) {
     // public Mono<Session> save(@RequestBody Session session) {
-        return Mono.just(ession)
+        return Mono.just(session)
                    .filter(s -> Objects.nonNull(s.getName()))
                    .filter(s -> Objects.nonNull(s.getSpeakers()))
                    .map(s -> Objects.isNull(s.getId()) ? s.setId(UUID.randomUUID()) : s)

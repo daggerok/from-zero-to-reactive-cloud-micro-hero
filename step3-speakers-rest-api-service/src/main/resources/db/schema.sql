@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS speakers;
+CREATE TABLE speakers (
+    -- id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
+    name VARCHAR NOT NULL
+);

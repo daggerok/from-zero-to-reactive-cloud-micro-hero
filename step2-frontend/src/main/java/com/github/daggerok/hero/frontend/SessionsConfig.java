@@ -14,11 +14,11 @@ import java.time.Duration;
 public class SessionsConfig {
 
     @Bean
-    Mono<RSocketRequester> sessions(RSocketRequester.Builder builder,
-                                    @Value("${sessions.port}") Integer sessionsPort) {
+    Mono<RSocketRequester> sessions(SessionsProps props,
+                                    RSocketRequester.Builder builder) {
 
         return builder.dataMimeType(MediaType.APPLICATION_JSON)
-                      .connectWebSocket(URI.create(String.format("http://127.0.0.1:%d", sessionsPort)))
+                      .connectWebSocket(URI.create(String.format("http://127.0.0.1:%d", props.getPort())))
                       // .cache()
                       .retryBackoff(5, Duration.ofSeconds(3));
     }
