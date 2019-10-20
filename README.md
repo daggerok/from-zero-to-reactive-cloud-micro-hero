@@ -5,23 +5,22 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 IN PROGRESS
 
 ## Done
-* Setup Travis CI pipelines
-* Initial draft and implement of VuePress documentation
-* Implement step1 with sets of spring boot 2.2 reactive applications
+* Configured Travis CI pipelines
+* Initialized draft and implement of VuePress documentation
+* Implemented step1 with sets of spring boot 2.2.0.RELEASE reactive applications
+* Implemented step2 with replacing in-memory map DBs ->  r2dbc-postgres (in docker) spring-data integration
 
 ## Road map
-* Implement step2 with replacing in-memory map DBs -> postgres r2dbc spring-data integration
-* Implement step3 with docker
-* Implement step4 with docker-compose
-* Implement step5 with docker-swarm
-* Implement step6 with k8s
-* Implement step7 with project riff
+* Implement step3 with docker-compose
+* Implement step4 with docker-swarm
+* Implement step5 with k8s / k3s, rancher, open-shift, etc
+* Implement step6 with project riff
 
 ## step1
 Simple sets of applications implementation for local run
 
 ```bash
-./mvnw
+./mvnw -DskipTests
 
 java -jar step1-speakers-rest-api-service/target/*.jar
 java -jar step1-sessions-rsocket-service/target/*.jar
@@ -31,6 +30,31 @@ java -jar step1-frontend/target/*.jar
 #http :8082/speakers name=bax
 #http :8082/speakers
 http :8080
+```
+
+## step2
+Simple sets of r2dbc applications with docker postgres
+
+```bash
+#./mvnw -pl :step2-docker docker:start
+docker stop pg || true ; docker run --rm --name pg -p 5432:5432 postgres:alpine
+
+./mvnw
+
+java -jar step2-speakers-rest-api-service/target/*.jar
+java -jar step2-sessions-rsocket-service/target/*.jar
+java -jar step2-frontend/target/*.jar
+
+#http :8085/speakers name=max
+#http :8085/speakers
+
+#http :8084/sessions name=maximum speakers=max
+#http :8084/sessions
+
+http :8083
+
+#./mvnw -pl :step2-docker docker:stop
+docker rm -f -v pg
 ```
 
 ## GitHub Pages
@@ -43,13 +67,7 @@ For further reference, please consider the following sections:
 * [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/maven-plugin/)
 * [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/htmlsingle/#configuration-metadata-annotation-processor)
 * [Thymeleaf](https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/reference/htmlsingle/#boot-features-spring-mvc-template-engines)
-
-## Guides
-The following guides illustrate how to use some features concretely:
-
 * [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
-
-## Others
-
 * [Error handling](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-ann-controller-exceptions)
 * [ServerWebExchange injection](https://github.com/spring-projects/spring-framework/issues/19857#issuecomment-453452436)
+* [R2DBC db initialization](https://github.com/spring-projects-experimental/spring-boot-r2dbc/blob/master/documentation.adoc#database-initialization)
