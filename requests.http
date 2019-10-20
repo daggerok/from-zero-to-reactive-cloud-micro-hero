@@ -14,24 +14,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://127.0.0.1:8081/sessions
-
-###
-GET http://127.0.0.1:8082/speakers
-
-###
 GET http://127.0.0.1:8080/
-
-###
-GET http://127.0.0.1:8082/
-
-###
-POST http://127.0.0.1:8084/sessions
-Content-Type: application/json
-
-{
-  "name": "Session"
-}
 
 ###
 POST http://127.0.0.1:8085/speakers
@@ -51,15 +34,26 @@ Content-Type: application/json
 }
 
 ###
-GET http://127.0.0.1:8084/sessions
-
-###
-GET http://127.0.0.1:8083/speakers
-
-###
 GET http://127.0.0.1:8083/
 
 ###
-GET http://127.0.0.1:8082/
+POST http://127.0.0.1:8088/speakers
+Content-Type: application/json
+
+{
+  "name": "Max"
+}
+
+###
+POST http://127.0.0.1:8087/sessions
+Content-Type: application/json
+
+{
+  "name": "Maximum!",
+  "speakers": "Max!"
+}
+
+###
+GET http://127.0.0.1:8086/
 
 ###
