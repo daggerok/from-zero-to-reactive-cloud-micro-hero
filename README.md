@@ -39,6 +39,28 @@ http :8080
 ## step2
 Simple sets of r2dbc applications with postgres (in docker)
 
+```bash
+./mvnw -pl :step2-docker docker:start
+#docker stop pg || true ; docker run --rm --name pg -p 5432:5432 postgres:alpine
+
+./mvnw
+
+java -jar step2-speakers-rest-api-service/target/*.jar
+java -jar step2-sessions-rsocket-service/target/*.jar
+java -jar step2-frontend/target/*.jar
+
+#http :8085/speakers name=max
+#http :8085/speakers
+
+#http :8084/sessions name=maximum speakers=max
+#http :8084/sessions
+
+http :8083
+
+./mvnw -pl :step2-docker docker:stop
+#docker rm -f -v pg
+```
+
 ## step3
 Aun applications in docker using fabric8.io maven plugin
 
