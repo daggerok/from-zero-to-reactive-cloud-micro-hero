@@ -45,6 +45,10 @@ Content-Type: application/json
 }
 
 ###
+GET http://127.0.0.1:8087/sessions
+Content-Type: application/json
+
+###
 POST http://127.0.0.1:8087/sessions
 Content-Type: application/json
 
