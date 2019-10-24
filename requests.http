@@ -50,8 +50,11 @@ Content-Type: application/json
 
 {
   "name": "Maximum!",
-  "speakers": "Max!"
+  "speakers": "Max!111oneone"
 }
+
+###
+GET http://127.0.0.1:8087/sessions
 
 ###
 GET http://127.0.0.1:8086/
