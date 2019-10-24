@@ -29,10 +29,8 @@ public class RSocketSessions {
     }
 
     @ResponseBody
-    // @Transactional
-    @PostMapping("/sessions")
-    public Mono<Integer> save(@RequestBody Session session) {
-    // public Mono<Session> save(@RequestBody Session session) {
+    @PostMapping("/sessions-db-cli")
+    public Mono<Integer> saveWithDatabaseClient(@RequestBody Session session) {
         return Mono.just(Objects.requireNonNull(session, "session may not be null"))
                    .filter(s -> Objects.nonNull(s.getName()))
                    .filter(s -> Objects.nonNull(s.getSpeakers()))
@@ -42,11 +40,15 @@ public class RSocketSessions {
                                        .bind("$2", s.getName())
                                        .bind("$3", s.getSpeakers())
                                        .fetch().rowsUpdated());
-        // return Mono.just(session)
-        //            .filter(s -> Objects.nonNull(s.getName()))
-        //            .filter(s -> Objects.nonNull(s.getSpeakers()))
-        //            .map(s -> Objects.isNull(s.getId()) ? s.setId(UUID.randomUUID()) : s)
-        //            .flatMap(sessionRepository::save);
+    }
+
+    @ResponseBody
+    @PostMapping("/sessions")
+    public Mono<Session> save(@RequestBody Session session) {
+        return Mono.just(session)
+                   .filter(s -> Objects.nonNull(s.getName()))
+                   .filter(s -> Objects.nonNull(s.getSpeakers()))
+                   .flatMap(sessionRepository::save);
     }
 
     @MessageMapping("sessions")
