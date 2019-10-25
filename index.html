@@ -7,7 +7,7 @@
     <meta name="description" content="Zero -&gt; Reactive Micro Hero">
     <link rel="icon" href="/from-zero-to-reactive-cloud-micro-hero/favicon.ico">
     
-    <link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/css/0.styles.70a5127a.css" as="style"><link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/app.ad7776e6.js" as="script"><link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/2.6eca8860.js" as="script"><link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/5.53a99f04.js" as="script"><link rel="prefetch" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/3.213cd3c0.js"><link rel="prefetch" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/4.0bb8f71a.js"><link rel="prefetch" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/6.b71de841.js">
+    <link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/css/0.styles.70a5127a.css" as="style"><link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/app.c92ef169.js" as="script"><link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/2.6eca8860.js" as="script"><link rel="preload" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/5.39b95721.js" as="script"><link rel="prefetch" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/3.213cd3c0.js"><link rel="prefetch" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/4.0bb8f71a.js"><link rel="prefetch" href="/from-zero-to-reactive-cloud-micro-hero/assets/js/6.b71de841.js">
     <link rel="stylesheet" href="/from-zero-to-reactive-cloud-micro-hero/assets/css/0.styles.70a5127a.css">
   </head>
   <body>
@@ -53,15 +53,15 @@ http :8083
 
 ./mvnw -pl :step3-speakers-rest-api-service-fabric8,:step3-sessions-rsocket-service-fabric8,:step3-frontend-fabric8 docker:stop docker:remove
 ./mvnw -f step3-postgres-fabric8/ docker:stop docker:remove
-</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><h2 id="step4"><a href="#step4" class="header-anchor">#</a> step4</h2> <p>Dockerized multi-module application using fabric8.io maven plugin (all in one)</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>./mvnw -f step4-all-in-one clean package -DskipTests
-./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:build docker:start
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><h2 id="step4"><a href="#step4" class="header-anchor">#</a> step4</h2> <p>Dockerized multi-module application using fabric8.io maven plugin (all in one)</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>./mvnw -f step4-all-in-one-fabric8 clean package -DskipTests
+./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:build docker:start
 
 <span class="token comment">#http :8090/sessions name=maximum speakers=max</span>
 <span class="token comment">#http :8091/speakers name=max</span>
 http :8089
 
-./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:stop docker:remove
-</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">10/25/2019, 11:02:11 PM</span></div></footer> <!----> </main></div><div class="global-ui"></div></div>
-    <script src="/from-zero-to-reactive-cloud-micro-hero/assets/js/app.ad7776e6.js" defer></script><script src="/from-zero-to-reactive-cloud-micro-hero/assets/js/2.6eca8860.js" defer></script><script src="/from-zero-to-reactive-cloud-micro-hero/assets/js/5.53a99f04.js" defer></script>
+./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:stop docker:remove
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">10/25/2019, 11:10:21 PM</span></div></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/from-zero-to-reactive-cloud-micro-hero/assets/js/app.c92ef169.js" defer></script><script src="/from-zero-to-reactive-cloud-micro-hero/assets/js/2.6eca8860.js" defer></script><script src="/from-zero-to-reactive-cloud-micro-hero/assets/js/5.39b95721.js" defer></script>
   </body>
 </html>
