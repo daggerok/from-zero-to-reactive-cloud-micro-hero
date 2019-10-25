@@ -11,28 +11,28 @@
 
     <modelVersion>4.0.0</modelVersion>
     <name>${project.artifactId}</name>
-    <groupId>com.github.daggerok.hero.step4</groupId>
-    <artifactId>step4-all-in-one</artifactId>
+    <groupId>com.github.daggerok.hero.step5</groupId>
+    <artifactId>step5-all-in-one-fabric8-compose</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>step4-sessions-rsocket-service</module>
-        <module>step4-speakers-rest-api-service</module>
-        <module>step4-frontend</module>
+        <module>step5-sessions-rsocket-service</module>
+        <module>step5-speakers-rest-api-service</module>
+        <module>step5-frontend</module>
     </modules>
 
     <properties>
-        <postgres-host>step4-postgres</postgres-host>
+        <postgres-host>step5-postgres</postgres-host>
         <postgres-port>5432</postgres-port>
 
-        <speakers-host>step4-speakers-rest-api-service</speakers-host>
-        <speakers-port>8091</speakers-port>
+        <speakers-host>step5-speakers-rest-api-service</speakers-host>
+        <speakers-port>8094</speakers-port>
 
-        <sessions-host>step4-sessions-rsocket-service</sessions-host>
-        <sessions-port>8090</sessions-port>
+        <sessions-host>step5-sessions-rsocket-service</sessions-host>
+        <sessions-port>8093</sessions-port>
 
-        <frontend-host>step4-frontend</frontend-host>
-        <frontend-port>8089</frontend-port>
+        <frontend-host>step5-frontend</frontend-host>
+        <frontend-port>8092</frontend-port>
 
         <docker-repository>daggerok</docker-repository>
         <docker-labels-maintainer>Maksim Kostromin https://github.com/daggerok</docker-labels-maintainer>
@@ -46,7 +46,7 @@
                 <configuration>
                     <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
                     <images>
-                        <!-- step4-postgres -->
+                        <!-- postgres -->
                         <image>
                             <name>${docker-repository}/${postgres-host}:${project.version}</name>
                             <alias>${postgres-host}</alias>
@@ -55,17 +55,14 @@
                                 <labels>
                                     <maintainer>${docker-labels-maintainer}</maintainer>
                                 </labels>
-                                <!--<tags>
-                                    <tag>${project.version}</tag>
-                                </tags>-->
                                 <ports>
                                     <port>${postgres-port}</port>
                                 </ports>
                                 <env>
-                                    <POSTGRES_PORT>${postgres-port}</POSTGRES_PORT>
                                     <POSTGRES_DB>postgres</POSTGRES_DB>
                                     <POSTGRES_USER>postgres</POSTGRES_USER>
                                     <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
+                                    <POSTGRES_PORT>${postgres-port}</POSTGRES_PORT>
                                     <POSTGRES_HOST>${postgres-host}.${project.artifactId}</POSTGRES_HOST>
                                 </env>
                                 <healthCheck>
@@ -93,7 +90,7 @@
                                 </wait>
                             </run>
                         </image>
-                        <!-- step4-sessions-rsocket-service -->
+                        <!-- sessions-rsocket-service -->
                         <image>
                             <name>${docker-repository}/${sessions-host}:${project.version}</name>
                             <alias>${sessions-host}</alias>
@@ -114,8 +111,8 @@
                                     <port>${sessions-port}</port>
                                 </ports>
                                 <healthCheck>
-                                    <timeout>3s</timeout><!-- Fail if no response after 3 seconds -->
-                                    <startPeriod>5s</startPeriod><!-- Allow 5 seconds for the container to start before being flagged as unhealthy -->
+                                    <timeout>3s</timeout>
+                                    <startPeriod>5s</startPeriod>
                                     <cmd>wget --quiet --tries=1 --spider http://127.0.0.1:${sessions-port}/actuator/health || exit 1</cmd>
                                 </healthCheck>
                                 <assembly>
@@ -161,7 +158,7 @@
                                 </wait>
                             </run>
                         </image>
-                        <!-- step4-speakers-rest-api-service -->
+                        <!-- speakers-rest-api-service -->
                         <image>
                             <name>${docker-repository}/${speakers-host}:${project.version}</name>
                             <alias>${speakers-host}</alias>
@@ -182,8 +179,8 @@
                                     <port>${speakers-port}</port>
                                 </ports>
                                 <healthCheck>
-                                    <timeout>3s</timeout><!-- Fail if no response after 3 seconds -->
-                                    <startPeriod>5s</startPeriod><!-- Allow 5 seconds for the container to start before being flagged as unhealthy -->
+                                    <timeout>3s</timeout>
+                                    <startPeriod>5s</startPeriod>
                                     <cmd>wget --quiet --tries=1 --spider http://127.0.0.1:${speakers-port}/actuator/health || exit 1</cmd>
                                 </healthCheck>
                                 <assembly>
@@ -229,17 +226,17 @@
                                 </wait>
                             </run>
                         </image>
-                        <!-- step4-frontend -->
+                        <!-- frontend -->
                         <image>
-                            <name>${docker-repository}/step4-frontend:${project.version}</name>
+                            <name>${docker-repository}/${frontend-host}:${project.version}</name>
                             <alias>step4-frontend</alias>
                             <build>
                                 <from>${openjdk.image}</from>
                                 <env>
-                                    <SESSIONS_HOST>step4-sessions-rsocket-service.${project.artifactId}</SESSIONS_HOST>
-                                    <SESSIONS_PORT>8090</SESSIONS_PORT>
-                                    <SPEAKERS_HOST>step4-speakers-rest-api-service.${project.artifactId}</SPEAKERS_HOST>
-                                    <SPEAKERS_PORT>8091</SPEAKERS_PORT>
+                                    <SESSIONS_HOST>${sessions-host}.${project.artifactId}</SESSIONS_HOST>
+                                    <SESSIONS_PORT>${sessions-port}</SESSIONS_PORT>
+                                    <SPEAKERS_HOST>${speakers-host}.${project.artifactId}</SPEAKERS_HOST>
+                                    <SPEAKERS_PORT>${speakers-port}</SPEAKERS_PORT>
                                     <SERVER_PORT>${frontend-port}</SERVER_PORT>
                                 </env>
                                 <labels>
@@ -249,18 +246,18 @@
                                     <port>${frontend-port}</port>
                                 </ports>
                                 <healthCheck>
-                                    <timeout>3s</timeout><!-- Fail if no response after 3 seconds -->
-                                    <startPeriod>5s</startPeriod><!-- Allow 5 seconds for the container to start before being flagged as unhealthy -->
+                                    <timeout>3s</timeout>
+                                    <startPeriod>5s</startPeriod>
                                     <cmd>wget --quiet --tries=1 --spider http://127.0.0.1:${frontend-port}/actuator/health || exit 1</cmd>
                                 </healthCheck>
                                 <assembly>
                                     <mode>dir</mode>
                                     <inline>
-                                        <id>build-frontend</id>
+                                        <id>build-${frontend-host}</id>
                                         <files>
                                             <file>
-                                                <source>${project.basedir}/step4-frontend/target/step4-frontend-${project.version}.jar</source>
-                                                <destName>step4-frontend.jar</destName>
+                                                <source>${project.basedir}/${frontend-host}/target/${frontend-host}-${project.version}.jar</source>
+                                                <destName>${frontend-host}.jar</destName>
                                             </file>
                                         </files>
                                     </inline>
@@ -268,21 +265,20 @@
                                     <targetDir>/tmp</targetDir>
                                 </assembly>
                                 <workdir>/tmp</workdir>
-                                <entryPoint>java -jar /tmp/step4-frontend.jar</entryPoint>
+                                <entryPoint>java -jar /tmp/${frontend-host}.jar</entryPoint>
                             </build>
                             <run>
                                 <dependsOn>
-                                    <container>step4-postgres</container>
-                                    <container>step4-sessions-rsocket-service</container>
-                                    <container>step4-speakers-rest-api-service</container>
+                                    <container>${sessions-host}</container>
+                                    <container>${speakers-host}</container>
                                 </dependsOn>
                                 <imagePullPolicy>Never</imagePullPolicy>
                                 <hostname>${project.artifactId}</hostname>
                                 <network>
                                     <mode>custom</mode>
                                     <name>${project.artifactId}</name>
-                                    <alias>step4-frontend</alias>
-                                    <alias>step4-frontend.${project.artifactId}</alias>
+                                    <alias>${frontend-host}</alias>
+                                    <alias>${frontend-host}.${project.artifactId}</alias>
                                 </network>
                                 <ports>
                                     <port>${frontend-port}:${frontend-port}</port>
