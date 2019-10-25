@@ -45,6 +45,18 @@ jobs:
   include:
   - stage: test
     jdk: openjdk11
+    name: test step4
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one clean package -DskipTests
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:build docker:start
+    - wait_for 8086 8087 8088
+    - http :8091/speakers name=max
+    - http :8090/sessions name=maximum speakers=max
+    - http :8089
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:stop docker:remove
+    - stop_any 5432 8089 8090 8091
+  - stage: test
+    jdk: openjdk11
     name: test step3
     script:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres/ docker:build docker:start
