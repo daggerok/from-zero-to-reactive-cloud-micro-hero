@@ -81,14 +81,28 @@ http :8086
 Dockerized multi-module application using fabric8.io maven plugin (all in one)
 
 ```bash
-./mvnw -f step4-all-in-one clean package -DskipTests
-./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:build docker:start
+./mvnw -f step4-all-in-one-fabric8 clean package -DskipTests
+./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:build docker:start
 
 #http :8090/sessions name=maximum speakers=max
 #http :8091/speakers name=max
 http :8089
 
-./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:stop docker:remove
+./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:stop docker:remove
+```
+
+## step5
+Dockerized multi-module application using fabric8.io maven plugin (compose mode)
+
+```bash
+./mvnw -f step5-all-in-one-fabric8 clean package -DskipTests
+./mvnw -f step5-all-in-one-fabric8 -pl :step5-all-in-one-fabric8 docker:build docker:start
+
+#http :8093/sessions name=maximum speakers=max
+#http :8094/speakers name=max
+http :8092
+
+./mvnw -f step5-all-in-one-fabric8 -pl :step5-all-in-one-fabric8 docker:stop docker:remove
 ```
 
 ## GitHub Pages

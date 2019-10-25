@@ -25,7 +25,8 @@
         <module>step3-sessions-rsocket-service-fabric8</module>
         <module>step3-frontend-fabric8</module>
 
-        <module>step4-all-in-one</module>
+        <module>step4-all-in-one-fabric8</module>
+        <module>step5-all-in-one-fabric8-compose</module>
     </modules>
 
     <developers>
