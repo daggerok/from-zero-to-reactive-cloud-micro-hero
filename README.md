@@ -10,15 +10,16 @@ IN PROGRESS
 * Implemented step1 with sets of spring boot 2.2.o.RELEASE reactive applications
 * Implemented step2 with replacing in-memory map DBs -> r2dbc-postgres spring-data integration (run pg in docker)
 * Implemented step3 and Dockerize all applications using fabric8.io maven plugin
+* Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)
 
 ## In progress
-* Implement step4 and Dockerize all applications using jib maven plugin from Google
+* Implement step5 and Dockerize all applications using jib maven plugin from Google
 
 ## Road map
-* Implement step5 with docker-compose maven plugin
-* Implement step6 with docker-swarm
-* Implement step7 with k8s / k3s, rancher, open-shift, etc
-* Implement step8 with project riff
+* Implement step6 with docker-compose maven plugin
+* Implement step7 with docker-swarm
+* Implement step8 with k8s / k3s, rancher, open-shift, etc
+* Implement step9 with project riff
 
 ## step1
 Simple sets of applications implementation for local run
@@ -49,11 +50,11 @@ java -jar step2-speakers-rest-api-service/target/*.jar
 java -jar step2-sessions-rsocket-service/target/*.jar
 java -jar step2-frontend/target/*.jar
 
-#http :8085/speakers name=max
-#http :8085/speakers
-
 #http :8084/sessions name=maximum speakers=max
 #http :8084/sessions
+
+#http :8085/speakers name=max
+#http :8085/speakers
 
 http :8083
 
@@ -62,18 +63,32 @@ http :8083
 ```
 
 ## step3
-Aun applications in docker using fabric8.io maven plugin
+An applications in docker using fabric8.io maven plugin
 
 ```bash
 ./mvnw -pl :step3-postgres docker:build docker:start
 ./mvnw -pl :step3-sessions-rsocket-service,:step3-speakers-rest-api-service,:step3-frontend clean package docker:build docker:start
 
-#http :8085/speakers name=max
-#http :8084/sessions name=maximum speakers=max
-http :8083
+#http :8087/sessions name=maximum speakers=max
+#http :8088/speakers name=max
+http :8086
 
 ./mvnw -pl :step3-speakers-rest-api-service,:step3-sessions-rsocket-service,:step3-frontend docker:stop docker:remove
 ./mvnw -f step3-postgres/ docker:stop docker:remove
+```
+
+## step4
+Dockerized multi-module application using fabric8.io maven plugin (all in one)
+
+```bash
+./mvnw -f step4-all-in-one clean package -DskipTests
+./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:build docker:start
+
+#http :8090/sessions name=maximum speakers=max
+#http :8091/speakers name=max
+http :8089
+
+./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:stop docker:remove
 ```
 
 ## GitHub Pages
@@ -95,3 +110,4 @@ For further reference, please consider the following sections:
 * [Maven + Docker by using fabric.io](https://dmp.fabric8.io/)
 * [Maven + Docker by using GoogleContainerTools/jib](GoogleContainerTools/jib) maven plugin
 * [Postgres on Docker Hub](https://hub.docker.com/_/postgres)
+* [Docker cleanup: docker images -f "dangling=true"](https://docs.docker.com/engine/reference/commandline/images/)

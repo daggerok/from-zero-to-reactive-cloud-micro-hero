@@ -24,6 +24,8 @@
         <module>step3-speakers-rest-api-service</module>
         <module>step3-sessions-rsocket-service</module>
         <module>step3-frontend</module>
+
+        <module>step4-all-in-one</module>
     </modules>
 
     <developers>
@@ -198,11 +200,11 @@
                         <useColor>true</useColor>
                         <logDate>default</logDate>
                         <autoPull>always</autoPull>
-                        <autoRemove>true</autoRemove>
                         <keepRunning>false</keepRunning>
                         <watchInterval>500</watchInterval>
                         <allContainers>true</allContainers>
                         <removeVolumes>true</removeVolumes>
+                        <imagePullPolicy>IfNotPresent</imagePullPolicy>
                         <autoCreateCustomNetworks>false</autoCreateCustomNetworks>
                     </configuration>
                 </plugin>
