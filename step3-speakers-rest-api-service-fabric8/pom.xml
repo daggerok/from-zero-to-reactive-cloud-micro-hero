@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <name>${project.artifactId}</name>
     <groupId>com.github.daggerok.hero.step3</groupId>
-    <artifactId>step3-sessions-rsocket-service</artifactId>
+    <artifactId>step3-speakers-rest-api-service-fabric8</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -28,26 +28,23 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-rsocket</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>io.vavr</groupId>
             <artifactId>vavr</artifactId>
@@ -72,7 +69,7 @@
     </dependencies>
 
     <properties>
-        <port>8087</port>
+        <port>8088</port>
     </properties>
 
     <build>
@@ -82,10 +79,10 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- sessions in docker:
-                ./mvnw -f step3-sessions-rsocket-service/ docker:build docker:start
+            <!-- speakers in docker:
+                ./mvnw -f step3-speakers-rest-api-service-fabric8/ docker:build docker:start
                 ...run other apps and test...
-                ./mvnw -f step3-sessions-rsocket-service/ docker:stop docker:remove
+                ./mvnw -f step3-speakers-rest-api-service-fabric8/ docker:stop docker:remove
             -->
             <plugin>
                 <groupId>io.fabric8</groupId>
@@ -98,7 +95,7 @@
                             <build>
                                 <from>${openjdk.image}</from>
                                 <env>
-                                    <POSTGRES_HOST>step3-postgres.${project.parent.artifactId}</POSTGRES_HOST>
+                                    <POSTGRES_HOST>step3-postgres-fabric8.${project.parent.artifactId}</POSTGRES_HOST>
                                     <POSTGRES_PORT>5432</POSTGRES_PORT>
                                     <POSTGRES_DB>postgres</POSTGRES_DB>
                                     <POSTGRES_USER>postgres</POSTGRES_USER>
@@ -128,7 +125,7 @@
                             </build>
                             <run>
                                 <dependsOn>
-                                    <container>step3-postgres-1</container>
+                                    <container>step3-postgres-fabric8-1</container>
                                 </dependsOn>
                                 <imagePullPolicy>Never</imagePullPolicy>
                                 <hostname>${project.artifactId}</hostname>

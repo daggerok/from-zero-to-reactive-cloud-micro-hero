@@ -19,10 +19,10 @@
             docker:volume-remove
             docker:watch
 
-        mvn -f step3-postgres/ docker:build
-        mvn -f step3-postgres/ docker:start
-        mvn -f step3-postgres/ docker:stop
-        mvn -f step3-postgres/ docker:remove
+        mvn -f step3-postgres-fabric8/ docker:build
+        mvn -f step3-postgres-fabric8/ docker:start
+        mvn -f step3-postgres-fabric8/ docker:stop
+        mvn -f step3-postgres-fabric8/ docker:remove
     -->
 
     <parent>
@@ -34,17 +34,17 @@
     <modelVersion>4.0.0</modelVersion>
     <name>${project.artifactId}</name>
     <groupId>com.github.daggerok.hero.step3</groupId>
-    <artifactId>step3-postgres</artifactId>
+    <artifactId>step3-postgres-fabric8</artifactId>
     <packaging>pom</packaging>
 
     <build>
         <plugins>
             <!-- postgres in docker:
-                ./mvnw -pl :step3-postgres docker:build
+                ./mvnw -pl :step3-postgres-fabric8 docker:build
                 ./mvnw -pl :step4-postgres docker:start
                 ...run other apps and test...
-                ./mvnw -pl :step3-postgres docker:stop
-                ./mvnw -pl :step3-postgres docker:remove
+                ./mvnw -pl :step3-postgres-fabric8 docker:stop
+                ./mvnw -pl :step3-postgres-fabric8 docker:remove
             -->
             <plugin>
                 <groupId>io.fabric8</groupId>
@@ -68,7 +68,7 @@
                                     <port>5432</port>
                                 </ports>
                                 <env>
-                                    <POSTGRES_HOST>step3-postgres.${project.parent.artifactId}</POSTGRES_HOST>
+                                    <POSTGRES_HOST>step3-postgres-fabric8.${project.parent.artifactId}</POSTGRES_HOST>
                                     <POSTGRES_PORT>5432</POSTGRES_PORT>
                                     <POSTGRES_DB>postgres</POSTGRES_DB>
                                     <POSTGRES_USER>postgres</POSTGRES_USER>
