@@ -41,8 +41,8 @@ http :8080
 Simple sets of r2dbc applications with postgres (in docker)
 
 ```bash
-./mvnw -pl :step2-docker docker:start
-#docker stop pg || true ; docker run --rm --name pg -p 5432:5432 postgres:alpine
+#./mvnw -pl :step2-docker docker:start
+docker stop pg || true ; docker run --rm --name pg -p 5432:5432 postgres:alpine
 
 ./mvnw
 
@@ -58,23 +58,23 @@ java -jar step2-frontend/target/*.jar
 
 http :8083
 
-./mvnw -pl :step2-docker docker:stop
-#docker rm -f -v pg
+#./mvnw -pl :step2-docker docker:stop
+docker rm -f -v pg
 ```
 
 ## step3
 An applications in docker using fabric8.io maven plugin
 
 ```bash
-./mvnw -pl :step3-postgres docker:build docker:start
-./mvnw -pl :step3-sessions-rsocket-service,:step3-speakers-rest-api-service,:step3-frontend clean package docker:build docker:start
+./mvnw -pl :step3-postgres-fabric8 docker:build docker:start
+./mvnw -pl :step3-sessions-rsocket-service-fabric8,:step3-speakers-rest-api-service-fabric8,:step3-frontend-fabric8 clean package docker:build docker:start
 
 #http :8087/sessions name=maximum speakers=max
 #http :8088/speakers name=max
 http :8086
 
-./mvnw -pl :step3-speakers-rest-api-service,:step3-sessions-rsocket-service,:step3-frontend docker:stop docker:remove
-./mvnw -f step3-postgres/ docker:stop docker:remove
+./mvnw -pl :step3-speakers-rest-api-service-fabric8,:step3-sessions-rsocket-service-fabric8,:step3-frontend-fabric8 docker:stop docker:remove
+./mvnw -f step3-postgres-fabric8/ docker:stop docker:remove
 ```
 
 ## step4

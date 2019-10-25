@@ -49,7 +49,6 @@ jobs:
     script:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one clean package -DskipTests
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one -pl :step4-all-in-one docker:build docker:start
-    - wait_for 8086 8087 8088
     - http :8091/speakers name=max
     - http :8090/sessions name=maximum speakers=max
     - http :8089
@@ -59,8 +58,8 @@ jobs:
     jdk: openjdk11
     name: test step3
     script:
-    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres/ docker:build docker:start
-    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step3-sessions-rsocket-service,:step3-speakers-rest-api-service,:step3-frontend clean package docker:build docker:start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres-fabric8/ docker:build docker:start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step3-sessions-rsocket-service-fabric8,:step3-speakers-rest-api-service-fabric8,:step3-frontend-fabric8 clean package docker:build docker:start
     - wait_for 8086 8087 8088
     - http :8086/actuator/health | jq '.'
     - http :8087/actuator/health | jq '.'
@@ -68,8 +67,8 @@ jobs:
     - http :8088/speakers name=max
     - http :8087/sessions name=maximum speakers=max
     - http :8086
-    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step3-speakers-rest-api-service,:step3-sessions-rsocket-service,:step3-frontend docker:stop docker:remove
-    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres/ docker:stop docker:remove
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step3-speakers-rest-api-service-fabric8,:step3-sessions-rsocket-service-fabric8,:step3-frontend-fabric8 docker:stop docker:remove
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres-fabric8/ docker:stop docker:remove
     - stop_any 8086 8087 8088 5432
   - stage: test
     jdk: openjdk11

@@ -88,7 +88,7 @@
                             <build>
                                 <from>${openjdk.image}</from>
                                 <env>
-                                    <POSTGRES_HOST>step3-postgres.${project.parent.artifactId}</POSTGRES_HOST>
+                                    <POSTGRES_HOST>step3-postgres-fabric8.${project.parent.artifactId}</POSTGRES_HOST>
                                     <POSTGRES_PORT>5432</POSTGRES_PORT>
                                     <POSTGRES_DB>postgres</POSTGRES_DB>
                                     <POSTGRES_USER>postgres</POSTGRES_USER>
@@ -118,7 +118,7 @@
                             </build>
                             <run>
                                 <dependsOn>
-                                    <container>step3-postgres-1</container>
+                                    <container>step3-postgres-fabric8-1</container>
                                 </dependsOn>
                                 <imagePullPolicy>Never</imagePullPolicy>
                                 <hostname>${project.artifactId}</hostname>
