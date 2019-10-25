@@ -20,10 +20,10 @@
         <module>step2-sessions-rsocket-service</module>
         <module>step2-frontend</module>
 
-        <module>step3-postgres</module>
-        <module>step3-speakers-rest-api-service</module>
-        <module>step3-sessions-rsocket-service</module>
-        <module>step3-frontend</module>
+        <module>step3-postgres-fabric8</module>
+        <module>step3-speakers-rest-api-service-fabric8</module>
+        <module>step3-sessions-rsocket-service-fabric8</module>
+        <module>step3-frontend-fabric8</module>
 
         <module>step4-all-in-one</module>
     </modules>

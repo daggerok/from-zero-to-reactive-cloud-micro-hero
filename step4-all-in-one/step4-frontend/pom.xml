@@ -95,9 +95,9 @@
                             <build>
                                 <from>${openjdk.image}</from>
                                 <env>
-                                    <SESSIONS_HOST>step3-sessions-rsocket-service.${project.parent.artifactId}</SESSIONS_HOST>
+                                    <SESSIONS_HOST>step3-sessions-rsocket-service-fabric8.${project.parent.artifactId}</SESSIONS_HOST>
                                     <SESSIONS_PORT>8087</SESSIONS_PORT>
-                                    <SPEAKERS_HOST>step3-speakers-rest-api-service.${project.parent.artifactId}</SPEAKERS_HOST>
+                                    <SPEAKERS_HOST>step3-speakers-rest-api-service-fabric8.${project.parent.artifactId}</SPEAKERS_HOST>
                                     <SPEAKERS_PORT>8088</SPEAKERS_PORT>
                                 </env>
                                 <labels>
@@ -124,8 +124,8 @@
                             </build>
                             <run>
                                 <dependsOn>
-                                    <container>step3-sessions-rsocket-service-1</container>
-                                    <container>step3-speakers-rest-api-service-1</container>
+                                    <container>step3-sessions-rsocket-service-fabric8-1</container>
+                                    <container>step3-speakers-rest-api-service-fabric8-1</container>
                                 </dependsOn>
                                 <imagePullPolicy>Never</imagePullPolicy>
                                 <hostname>${project.artifactId}</hostname>
