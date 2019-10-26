@@ -5,13 +5,13 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 IN PROGRESS
 
 ## Done
-* Configured Travis CI pipelines
-* Initialized draft and implement of VuePress documentation
-* Implemented step1 with sets of spring boot 2.2.o.RELEASE reactive applications
-* Implemented step2 with replacing in-memory map DBs -> r2dbc-postgres spring-data integration (run pg in docker)
-* Implemented step3 and Dockerize all applications using fabric8.io maven plugin
-* Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)
-* Implemented step5 with docker-compose maven plugin
+* ~~Configured Travis CI pipelines~~
+* ~~Initialized draft and implement of VuePress documentation~~
+* ~~Implemented step1 with sets of spring boot 2.2.o.RELEASE reactive applications~~
+* ~~Implemented step2 with replacing in-memory map DBs -> r2dbc-postgres spring-data integration (run pg in docker)~~
+* ~~Implemented step3 and Dockerize all applications using fabric8.io maven plugin~~
+* ~~Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)~~
+* ~~Implemented step5 with docker-compose maven plugin~~
 
 ## In progress
 * Implement step6 and Dockerize all applications using jib maven plugin from Google

@@ -51,8 +51,8 @@ jobs:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:up
-    - http :8094/speakers name=max
-    - http :8093/sessions name=maximum speakers=max
+    - http :8094/speakers name=max                  | jq '.'
+    - http :8093/sessions name=maximum speakers=max | jq '.'
     - http :8092
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:down
   - stage: test
