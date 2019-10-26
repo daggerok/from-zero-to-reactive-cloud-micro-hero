@@ -32,7 +32,7 @@
             <plugin>
                 <groupId>com.dkanejs.maven.plugins</groupId>
                 <artifactId>docker-compose-maven-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${docker-compose-maven-plugin.version}</version>
                 <configuration>
                     <composeFiles>
                         <composeFile>${project.basedir}/docker-compose.yml</composeFile>
