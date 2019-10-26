@@ -32,19 +32,10 @@
             <plugin>
                 <groupId>com.dkanejs.maven.plugins</groupId>
                 <artifactId>docker-compose-maven-plugin</artifactId>
-                <version>${docker-compose-maven-plugin.version}</version>
                 <configuration>
                     <composeFiles>
                         <composeFile>${project.basedir}/docker-compose.yml</composeFile>
                     </composeFiles>
-                    <detail>true</detail>
-                    <verbose>false</verbose>
-                    <detachedMode>true</detachedMode>
-                    <ignorePullFailures>true</ignorePullFailures>
-                    <removeImagesType>local</removeImagesType>
-                    <removeImages>true</removeImages>
-                    <removeOrphans>true</removeOrphans>
-                    <removeVolumes>true</removeVolumes>
                 </configuration>
             </plugin>
             <plugin>

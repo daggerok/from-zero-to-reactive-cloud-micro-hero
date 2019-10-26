@@ -26,8 +26,8 @@
         <module>step3-frontend-fabric8</module>
 
         <module>step4-all-in-one-fabric8</module>
-
         <module>step5-all-in-one-docker-compose</module>
+        <module>step6-all-in-one-google-jib</module>
     </modules>
 
     <developers>
@@ -75,6 +75,7 @@
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
+        <jib-maven-plugin.version>1.7.0</jib-maven-plugin.version>
         <docker-compose-maven-plugin.version>2.5.1</docker-compose-maven-plugin.version>
         <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
         <postgres.image>healthcheck/postgres:alpine</postgres.image>
@@ -210,6 +211,22 @@
                         <removeVolumes>true</removeVolumes>
                         <imagePullPolicy>IfNotPresent</imagePullPolicy>
                         <autoCreateCustomNetworks>false</autoCreateCustomNetworks>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.dkanejs.maven.plugins</groupId>
+                    <artifactId>docker-compose-maven-plugin</artifactId>
+                    <version>${docker-compose-maven-plugin.version}</version>
+                    <configuration>
+                        <detail>true</detail>
+                        <verbose>false</verbose>
+                        <detachedMode>true</detachedMode>
+                        <ignorePullFailures>true</ignorePullFailures>
+                        <removeImagesType>local</removeImagesType>
+                        <removeImages>true</removeImages>
+                        <removeOrphans>true</removeOrphans>
+                        <removeVolumes>true</removeVolumes>
                     </configuration>
                 </plugin>
             </plugins>

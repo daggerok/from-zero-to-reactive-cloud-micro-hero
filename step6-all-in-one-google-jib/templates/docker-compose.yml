@@ -106,8 +106,3 @@ services:
       timeout: 3s
       interval: 3s
       test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
-  healthcheck: # really, not needed, just for CI in our case...
-    image: busybox
-    depends_on:
-      frontend:
-        condition: service_healthy

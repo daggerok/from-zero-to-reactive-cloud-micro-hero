@@ -45,6 +45,19 @@ jobs:
   include:
   - stage: test
     jdk: openjdk11
+    name: test step6
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Ppg-start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step6-all-in-one-google-jib
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Ppg-stop
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-create
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-up
+    - http :8097/speakers name=max                  | jq '.'
+    - http :8096/sessions name=maximum speakers=max | jq '.'
+    - http :8095
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-down
+  - stage: test
+    jdk: openjdk11
     name: test step5
     script:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:build docker:start
