@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>com.github.daggerok.hero.step5</groupId>
-        <artifactId>step5-all-in-one-fabric8-compose</artifactId>
+        <artifactId>step5-all-in-one-docker-compose</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
