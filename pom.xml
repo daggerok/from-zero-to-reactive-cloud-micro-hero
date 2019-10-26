@@ -26,7 +26,8 @@
         <module>step3-frontend-fabric8</module>
 
         <module>step4-all-in-one-fabric8</module>
-        <module>step5-all-in-one-fabric8-compose</module>
+
+        <module>step5-all-in-one-docker-compose</module>
     </modules>
 
     <developers>
@@ -71,6 +72,7 @@
         <frontend-maven-plugin.nodeVersion>v12.11.1</frontend-maven-plugin.nodeVersion>
 
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
         <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>

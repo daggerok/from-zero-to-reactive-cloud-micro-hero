@@ -47,13 +47,14 @@ jobs:
     jdk: openjdk11
     name: test step5
     script:
-    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-fabric8-compose clean package -DskipTests
-    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-fabric8-compose -pl :step5-all-in-one-fabric8-compose docker:build docker:start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:build docker:start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:up
     - http :8094/speakers name=max
     - http :8093/sessions name=maximum speakers=max
     - http :8092
-    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-fabric8-compose -pl :step5-all-in-one-fabric8-compose docker:stop docker:remove
-    - stop_any 5432 8092 8093 8094
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:down
   - stage: test
     jdk: openjdk11
     name: test step4
