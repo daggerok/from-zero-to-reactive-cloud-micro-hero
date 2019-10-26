@@ -11,6 +11,7 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 * ~~Implemented step3 and Dockerize all applications using fabric8.io maven plugin~~
 * ~~Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)~~
 * ~~Implemented step5 with docker-compose maven plugin~~
+* ~~Implemented step6 and Dockerize all applications using jib maven plugin from Google~~
 
 ## step1
 Simple sets of applications implementation for local run
@@ -97,4 +98,22 @@ Dockerized multi-module application using docker-compose maven plugin (all in on
 http :8092
 
 ./mvnw -pl :step5-all-in-one-docker-compose docker-compose:down
+```
+
+## step6
+Dockerized multi-module application using jib maven plugin from Google and docker-compose maven plugin (all in one)
+
+```bash
+./mvnw -pl :step6-all-in-one-google-jib -P pg-start
+./mvnw -f step6-all-in-one-google-jib compile jib:dockerBuild
+./mvnw -pl :step6-all-in-one-google-jib -P pg-stop
+
+./mvnw -pl :step6-all-in-one-google-jib -P compose-create
+./mvnw -pl :step6-all-in-one-google-jib -P compose-up
+
+#http :8096/sessions name=maximum speakers=max
+#http :8097/speakers name=max
+http :8095
+
+./mvnw -pl :step6-all-in-one-google-jib -P compose-down
 ```

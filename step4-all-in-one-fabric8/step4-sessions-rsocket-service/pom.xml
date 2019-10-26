@@ -70,78 +70,11 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <port>8087</port>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <configuration>
-                    <images>
-                        <image>
-                            <name>daggerok/${project.artifactId}:${project.version}</name>
-                            <alias>${project.artifactId}</alias>
-                            <build>
-                                <from>${openjdk.image}</from>
-                                <env>
-                                    <POSTGRES_HOST>step3-postgres-fabric8.${project.parent.artifactId}</POSTGRES_HOST>
-                                    <POSTGRES_PORT>5432</POSTGRES_PORT>
-                                    <POSTGRES_DB>postgres</POSTGRES_DB>
-                                    <POSTGRES_USER>postgres</POSTGRES_USER>
-                                    <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
-                                </env>
-                                <labels>
-                                    <maintainer>Maksim Kostromin https://github.com/daggerok</maintainer>
-                                </labels>
-                                <tags>
-                                    <tag>latest</tag>
-                                    <tag>${project.version}</tag>
-                                </tags>
-                                <ports>
-                                    <port>${port}</port>
-                                </ports>
-                                <healthCheck>
-                                    <timeout>3s</timeout>
-                                    <startPeriod>5s</startPeriod>
-                                    <cmd>wget --quiet --tries=1 --spider http://127.0.0.1:${port}/actuator/health || exit 1</cmd>
-                                </healthCheck>
-                                <assembly>
-                                    <name>tmp</name>
-                                    <descriptorRef>artifact</descriptorRef>
-                                </assembly>
-                                <workdir>/tmp</workdir>
-                                <entryPoint>java -jar ${project.artifactId}-${project.version}.jar</entryPoint>
-                            </build>
-                            <run>
-                                <dependsOn>
-                                    <container>step3-postgres-fabric8-1</container>
-                                </dependsOn>
-                                <imagePullPolicy>Never</imagePullPolicy>
-                                <hostname>${project.artifactId}</hostname>
-                                <network>
-                                    <mode>custom</mode>
-                                    <name>${project.parent.artifactId}</name>
-                                    <alias>${project.artifactId}</alias>
-                                    <alias>${project.artifactId}.${project.parent.artifactId}</alias>
-                                </network>
-                                <ports>
-                                    <port>${port}:${port}</port>
-                                </ports>
-                                <wait>
-                                    <time>60000</time>
-                                    <healthy>true</healthy>
-                                </wait>
-                            </run>
-                        </image>
-                    </images>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -12,12 +12,12 @@ IN PROGRESS
 * ~~Implemented step3 and Dockerize all applications using fabric8.io maven plugin~~
 * ~~Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)~~
 * ~~Implemented step5 with docker-compose maven plugin~~
+* ~~Implemented step6 and Dockerize all applications using jib maven plugin from Google~~
 
 ## In progress
-* Implement step6 and Dockerize all applications using jib maven plugin from Google
+* Implement step7 with docker-swarm
 
 ## Road map
-* Implement step7 with docker-swarm
 * Implement step8 with k8s / k3s, rancher, open-shift, etc
 * Implement step9 with project riff
 
@@ -108,6 +108,25 @@ http :8092
 ./mvnw -pl :step5-all-in-one-docker-compose docker-compose:down
 ```
 
+## step6
+Dockerized multi-module application using jib maven plugin from Google and docker-compose maven plugin (all in one)
+
+```bash
+./mvnw -pl :step6-all-in-one-google-jib -P pg-start
+./mvnw -f step6-all-in-one-google-jib compile jib:dockerBuild
+./mvnw -pl :step6-all-in-one-google-jib -P pg-stop
+
+./mvnw -pl :step6-all-in-one-google-jib -P compose-create
+./mvnw -pl :step6-all-in-one-google-jib -P compose-up
+
+#http :8096/sessions name=maximum speakers=max
+#http :8097/speakers name=max
+http :8095
+
+./mvnw -pl :step6-all-in-one-google-jib -P compose-down
+```
+
+
 ## GitHub Pages
 Documentation is located [here](https://daggerok.github.io/from-zero-to-reactive-cloud-micro-hero/)
 
@@ -129,3 +148,7 @@ For further reference, please consider the following sections:
 * [Postgres on Docker Hub](https://hub.docker.com/_/postgres)
 * [Docker cleanup: docker images -f "dangling=true"](https://docs.docker.com/engine/reference/commandline/images/)
 * [docker-compose-maven-plugin](https://github.com/dkanejs/docker-compose-maven-plugin)
+* [Spring Boot Google JIB](https://github.com/GoogleContainerTools/jib/tree/master/examples/spring-boot)
+* [Google JIB FAQ](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md)
+* [jib-maven-plugin](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin)
+* [No fat jars with jib](https://phauer.com/2019/no-fat-jar-in-docker-image/)
