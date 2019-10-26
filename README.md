@@ -11,12 +11,12 @@ IN PROGRESS
 * Implemented step2 with replacing in-memory map DBs -> r2dbc-postgres spring-data integration (run pg in docker)
 * Implemented step3 and Dockerize all applications using fabric8.io maven plugin
 * Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)
+* Implemented step5 with docker-compose maven plugin
 
 ## In progress
-* Implement step5 and Dockerize all applications using jib maven plugin from Google
+* Implement step6 and Dockerize all applications using jib maven plugin from Google
 
 ## Road map
-* Implement step6 with docker-compose maven plugin
 * Implement step7 with docker-swarm
 * Implement step8 with k8s / k3s, rancher, open-shift, etc
 * Implement step9 with project riff
@@ -92,17 +92,20 @@ http :8089
 ```
 
 ## step5
-Dockerized multi-module application using fabric8.io maven plugin (compose mode)
+Dockerized multi-module application using docker-compose maven plugin (all in one)
 
 ```bash
-./mvnw -f step5-all-in-one-fabric8 clean package -DskipTests
-./mvnw -f step5-all-in-one-fabric8 -pl :step5-all-in-one-fabric8 docker:build docker:start
+./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:build docker:start
+./mvnw -f step5-all-in-one-docker-compose
+./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
+
+#./mvnw -pl :step5-all-in-one-docker-compose docker-compose:up
 
 #http :8093/sessions name=maximum speakers=max
 #http :8094/speakers name=max
 http :8092
 
-./mvnw -f step5-all-in-one-fabric8 -pl :step5-all-in-one-fabric8 docker:stop docker:remove
+./mvnw -pl :step5-all-in-one-docker-compose docker-compose:down
 ```
 
 ## GitHub Pages
@@ -125,3 +128,4 @@ For further reference, please consider the following sections:
 * [Maven + Docker by using GoogleContainerTools/jib](GoogleContainerTools/jib) maven plugin
 * [Postgres on Docker Hub](https://hub.docker.com/_/postgres)
 * [Docker cleanup: docker images -f "dangling=true"](https://docs.docker.com/engine/reference/commandline/images/)
+* [docker-compose-maven-plugin](https://github.com/dkanejs/docker-compose-maven-plugin)

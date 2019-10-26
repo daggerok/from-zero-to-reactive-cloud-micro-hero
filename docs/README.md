@@ -10,6 +10,7 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 * Implemented step2 with replacing in-memory map DBs -> r2dbc-postgres spring-data integration (run pg in docker)
 * Implemented step3 and Dockerize all applications using fabric8.io maven plugin
 * Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)
+* Implemented step5 with docker-compose maven plugin
 
 ## step1
 Simple sets of applications implementation for local run
@@ -79,4 +80,21 @@ Dockerized multi-module application using fabric8.io maven plugin (all in one)
 http :8089
 
 ./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:stop docker:remove
+```
+
+## step5
+Dockerized multi-module application using docker-compose maven plugin (all in one)
+
+```bash
+./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:build docker:start
+./mvnw -f step5-all-in-one-docker-compose
+./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
+
+#./mvnw -pl :step5-all-in-one-docker-compose docker-compose:up
+
+#http :8093/sessions name=maximum speakers=max
+#http :8094/speakers name=max
+http :8092
+
+./mvnw -pl :step5-all-in-one-docker-compose docker-compose:down
 ```
