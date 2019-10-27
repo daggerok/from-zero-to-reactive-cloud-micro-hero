@@ -70,12 +70,10 @@ jobs:
     #
     - docker stack deploy --compose-file $TRAVIS_BUILD_DIR/step7-all-in-one-docker-swarm/docker-compose.yml step7
     - docker service ls --format '{{.Replicas}} {{.Name}}'
-    - |
-      while [[ $(docker ps -q --filter health=healthy -f status=running | wc -l) -lt 4 ]] ; do
+    - while [[ $(docker ps -q --filter health=healthy -f status=running | wc -l) -lt 4 ]] ; do
         echo -n '.' ;
         sleep 1s ;
       done ;
-      echo ;
     - echo "ready!"
     - docker service ls --format '{{.Replicas}} {{.Name}}'
     - docker stack ls
