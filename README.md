@@ -162,7 +162,7 @@ http :8098
 _docker stack deploy_
 
 ```bash
-docker stack deploy --compose-file step7-all-in-one-docker-swarm/docker-compose.yml step7
+docker stack deploy -c step7-all-in-one-docker-swarm/docker-compose.yml step7
 
 #http :8100/speakers name=max                  | jq '.'
 #http :8099/sessions name=maximum speakers=max | jq '.'
@@ -214,3 +214,7 @@ For further reference, please consider the following sections:
 * [Docker Swarm getting started guide](https://docs.docker.com/engine/swarm/stack-deploy/)
 * [Docker Swarm -> k8s](https://hackernoon.com/a-kubernetes-guide-for-docker-swarm-users-c14c8aa266cc)
 * [YouTujbe: Deploying and scaling applications with Docker, Swarm, and a tiny bit of Python magic - PyCon 2016](https://www.youtube.com/watch?v=GpHMTR7P2Ms)
+* [YouTube: Deploy and scale containers with Docker native, open source orchestration PyCon 2017](https://www.youtube.com/watch?v=EuzoEaE6Cqs)
+* [Container Training](https://container.training/)
+
+
