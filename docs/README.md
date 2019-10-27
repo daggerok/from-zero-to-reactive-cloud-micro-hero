@@ -12,6 +12,7 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 * ~~Implemented step4 and Dockerize multi-module application using fabric8.io maven plugin (all in one)~~
 * ~~Implemented step5 with docker-compose maven plugin~~
 * ~~Implemented step6 and Dockerize all applications using jib maven plugin from Google~~
+* ~~Implemented step7 with docker-swarm~~
 
 ## step 1
 Simple sets of applications implementation for local run
@@ -116,6 +117,51 @@ Dockerized multi-module application using jib maven plugin from Google and docke
 http :8095
 
 ./mvnw -pl :step6-all-in-one-google-jib -P compose-down
+```
+
+## step 7
+Dockerized multi-module application using docker-swarm (all in one)
+
+_prepare docker-swarm_
+
+```bash
+docker swarm init
+docker service create --name registry --publish published=5000,target=5000 registry:2
+```
+
+_run test postgres container for success tests during build_
+
+```bash
+./mvnw -pl :step7-all-in-one-docker-swarm -P pg-start
+./mvnw -f step7-all-in-one-docker-swarm compile jib:build
+./mvnw -pl :step7-all-in-one-docker-swarm -P pg-stop
+```
+
+_test with docker-compose_
+
+```bash
+./mvnw -pl :step7-all-in-one-docker-swarm -P compose-create
+./mvnw -pl :step7-all-in-one-docker-swarm -P compose-up
+
+#http :8099/sessions name=maximum speakers=max
+#http :8100/speakers name=max
+http :8098
+
+./mvnw -pl :step7-all-in-one-docker-swarm -P compose-down
+```
+
+_docker stack deploy_
+
+```bash
+docker stack deploy --compose-file step7-all-in-one-docker-swarm/docker-compose.yml step7
+
+#http :8100/speakers name=max                  | jq '.'
+#http :8099/sessions name=maximum speakers=max | jq '.'
+http :8098
+
+docker stack rm step7
+docker service rm registry
+docker swarm leave --force
 ```
 
 ## cleanup
