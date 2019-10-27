@@ -213,3 +213,4 @@ For further reference, please consider the following sections:
 * [No fat jars with jib](https://phauer.com/2019/no-fat-jar-in-docker-image/)
 * [Docker Swarm getting started guide](https://docs.docker.com/engine/swarm/stack-deploy/)
 * [Docker Swarm -> k8s](https://hackernoon.com/a-kubernetes-guide-for-docker-swarm-users-c14c8aa266cc)
+* [YouTujbe: Deploying and scaling applications with Docker, Swarm, and a tiny bit of Python magic - PyCon 2016](https://www.youtube.com/watch?v=GpHMTR7P2Ms)
