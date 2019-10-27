@@ -3,7 +3,7 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 
 [[toc]]
 
-## what?
+## what is here?
 * ~~Configured Travis CI pipelines~~
 * ~~Initialized draft and implement of VuePress documentation~~
 * ~~Implemented step1 with sets of spring boot 2.2.o.RELEASE reactive applications~~
@@ -13,7 +13,7 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 * ~~Implemented step5 with docker-compose maven plugin~~
 * ~~Implemented step6 and Dockerize all applications using jib maven plugin from Google~~
 
-## step1
+## step 1
 Simple sets of applications implementation for local run
 
 ```bash
@@ -29,7 +29,7 @@ java -jar step1-frontend/target/*.jar
 http :8080
 ```
 
-## step2
+## step 2
 Simple sets of r2dbc applications with postgres (in docker)
 
 ```bash
@@ -54,7 +54,7 @@ http :8083
 #docker rm -f -v pg
 ```
 
-## step3
+## step 3
 An applications in docker using fabric8.io maven plugin
 
 ```bash
@@ -69,7 +69,7 @@ http :8083
 ./mvnw -f step3-postgres-fabric8/ docker:stop docker:remove
 ```
 
-## step4
+## step 4
 Dockerized multi-module application using fabric8.io maven plugin (all in one)
 
 ```bash
@@ -83,7 +83,7 @@ http :8089
 ./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:stop docker:remove
 ```
 
-## step5
+## step 5
 Dockerized multi-module application using docker-compose maven plugin (all in one)
 
 ```bash
@@ -100,7 +100,7 @@ http :8092
 ./mvnw -pl :step5-all-in-one-docker-compose docker-compose:down
 ```
 
-## step6
+## step 6
 Dockerized multi-module application using jib maven plugin from Google and docker-compose maven plugin (all in one)
 
 ```bash
@@ -116,4 +116,17 @@ Dockerized multi-module application using jib maven plugin from Google and docke
 http :8095
 
 ./mvnw -pl :step6-all-in-one-google-jib -P compose-down
+```
+
+## cleanup
+
+```bash
+#docker rm -f -v `docker ps -aq`
+for i in $(docker ps -aq) ; do docker rm -f -v $i ; done
+
+#docker rmi -f `docker images -q --filter=dangling=true`
+for i in $(docker images -q --filter=dangling=true) ; do docker rmi -f $i ; done
+
+#docker rmi -f `docker images -q -f=reference='*/*step*'`
+for i in $(docker images -q -f=reference='*/*step*') ; do docker rmi -f $i ; done
 ```

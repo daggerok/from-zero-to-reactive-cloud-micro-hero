@@ -21,7 +21,7 @@ IN PROGRESS
 * Implement step8 with k8s / k3s, rancher, open-shift, etc
 * Implement step9 with project riff
 
-## step1
+## Step 1
 Simple sets of applications implementation for local run
 
 ```bash
@@ -37,7 +37,7 @@ java -jar step1-frontend/target/*.jar
 http :8080
 ```
 
-## step2
+## Step 2
 Simple sets of r2dbc applications with postgres (in docker)
 
 ```bash
@@ -62,7 +62,7 @@ http :8083
 docker rm -f -v pg
 ```
 
-## step3
+## Step 3
 An applications in docker using fabric8.io maven plugin
 
 ```bash
@@ -77,7 +77,7 @@ http :8086
 ./mvnw -f step3-postgres-fabric8/ docker:stop docker:remove
 ```
 
-## step4
+## Step 4
 Dockerized multi-module application using fabric8.io maven plugin (all in one)
 
 ```bash
@@ -91,7 +91,7 @@ http :8089
 ./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:stop docker:remove
 ```
 
-## step5
+## Step 5
 Dockerized multi-module application using docker-compose maven plugin (all in one)
 
 ```bash
@@ -108,7 +108,7 @@ http :8092
 ./mvnw -pl :step5-all-in-one-docker-compose docker-compose:down
 ```
 
-## step6
+## Step 6
 Dockerized multi-module application using jib maven plugin from Google and docker-compose maven plugin (all in one)
 
 ```bash
@@ -126,11 +126,23 @@ http :8095
 ./mvnw -pl :step6-all-in-one-google-jib -P compose-down
 ```
 
+## Cleanup
+
+```bash
+#docker rm -f -v `docker ps -aq`
+for i in $(docker ps -aq) ; do docker rm -f -v $i ; done
+
+#docker rmi -f `docker images -q --filter=dangling=true`
+for i in $(docker images -q --filter=dangling=true) ; do docker rmi -f $i ; done
+
+#docker rmi -f `docker images -q -f=reference='*/*step*'`
+for i in $(docker images -q -f=reference='*/*step*') ; do docker rmi -f $i ; done
+```
 
 ## GitHub Pages
 Documentation is located [here](https://daggerok.github.io/from-zero-to-reactive-cloud-micro-hero/)
 
-## Reference Documentation
+## Resources
 For further reference, please consider the following sections:
 
 * [YouTube: Kubernetes Master Class: Kubernetes from Zero to Hero](https://www.youtube.com/watch?v=srQJq1gJXRw)
