@@ -45,6 +45,49 @@ jobs:
   include:
   - stage: test
     jdk: openjdk11
+    name: test step7
+    before_script:
+    - docker swarm init
+    - docker service create --name registry --publish published=5000,target=5000 registry:2
+    #
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step7-all-in-one-docker-swarm
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-stop
+    #
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-create
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-up
+    - |
+      while [[ $(docker ps -q --filter health=healthy -f status=running | wc -l) -lt 4 ]] ; do
+        sleep 0.3s ;
+      done ;
+      echo '' ;
+    - echo ready...
+    - http :8100/speakers name=max                  | jq '.'
+    - http :8099/sessions name=maximum speakers=max | jq '.'
+    - http :8098
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-down
+    #
+    - docker stack deploy --compose-file $TRAVIS_BUILD_DIR/step7-all-in-one-docker-swarm/docker-compose.yml step7
+    - |
+      while [[ $(docker ps -q --filter health=healthy -f status=running | wc -l) -lt 4 ]] ; do
+        sleep 1s ;
+        docker service ls --format '{{.Replicas}} {{.Name}}' ;
+      done ;
+      echo ;
+    - echo "ready!"
+    - docker stack ls
+    - docker service ls
+    script:
+    - http :8100/speakers name=max                  | jq '.'
+    - http :8099/sessions name=maximum speakers=max | jq '.'
+    - http :8098
+    after_script:
+    - docker stack rm step7
+    - docker service rm registry
+    - docker network rm $(docker network ls --filter label=com.docker.compose.project -q)
+    - docker swarm leave --force
+  - stage: test
+    jdk: openjdk11
     name: test step6
     script:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Ppg-start
