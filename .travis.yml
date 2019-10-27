@@ -79,7 +79,6 @@ jobs:
     - echo "ready!"
     - docker service ls --format '{{.Replicas}} {{.Name}}'
     - docker stack ls
-    - docker service ls
     script:
     - http :8100/speakers name=max                  | jq '.'
     - http :8099/sessions name=maximum speakers=max | jq '.'
