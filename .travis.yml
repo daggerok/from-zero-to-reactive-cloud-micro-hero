@@ -48,11 +48,17 @@ jobs:
     name: test step7
     before_script:
     - docker swarm init
+    #- docker service create --name=viz
+    #                        --publish=80:8080/tcp
+    #                        --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock
+    #                        dockersamples/visualizer
     - docker service create --name registry --publish published=5000,target=5000 registry:2
     #
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-start
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step7-all-in-one-docker-swarm
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-stop
+    #
+    - http :5000/v2/_catalog
     #
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-create
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-up
@@ -83,6 +89,7 @@ jobs:
     - http :8098
     after_script:
     - docker stack rm step7
+    #- docker service rm viz
     - docker service rm registry
     - docker network rm $(docker network ls --filter label=com.docker.compose.project -q)
     - docker swarm leave --force
