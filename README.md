@@ -216,5 +216,4 @@ For further reference, please consider the following sections:
 * [YouTujbe: Deploying and scaling applications with Docker, Swarm, and a tiny bit of Python magic - PyCon 2016](https://www.youtube.com/watch?v=GpHMTR7P2Ms)
 * [YouTube: Deploy and scale containers with Docker native, open source orchestration PyCon 2017](https://www.youtube.com/watch?v=EuzoEaE6Cqs)
 * [Container Training](https://container.training/)
-
-
+* [k8s workshop](https://pycon2019.container.training/)
