@@ -58,7 +58,7 @@ jobs:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step7-all-in-one-docker-swarm
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-stop
     #
-    - http :5000/v2/_catalog
+    - http :5000/v2/_catalog | jq '.'
     #
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-create
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-up
