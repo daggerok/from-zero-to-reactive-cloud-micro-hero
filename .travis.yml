@@ -8,39 +8,48 @@ git:
   depth: false
 jdk: openjdk11
 node_js: lts/*
+services:
+  - docker
+  - xvfb
 python: 3.7
 matrix:
   include:
-  - python: 3.7
-services: docker
+    - python: 3.7
 addons:
   apt:
-    update: true
+    update: false
     packages:
-    - python3-setuptools
-    - python3-pip
-    #- sudo
-    #- lsof
-    #- curl
-    - jq
+      - jq
+      - bash
+      - curl
+      - tree
+      - docker-ce
+      - libxml2-utils
+      - libappindicator1
+      - fonts-liberation
+      - google-chrome-stable
+      - python3-setuptools
+      - python3-pip
 install: true
 before_install:
-- |
-  if [ ! -f ${HOME}/.local/daggerok/bash-functions/master/main.bash ] ; then
-    mkdir -p ${HOME}/.local/daggerok/bash-functions/master ;
-    curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash > ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
-  fi
-  source ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
-- stop_any 80 5432 8080 8081 8082 8083 8084 8085 8086 8087 8088
-#
-- export PATH=$HOME/.local/bin:$PATH
-- docker-compose version
-- pip -V
-- pip3 install --user --upgrade pip
-- pip install --user --upgrade docker-compose httpie
-- http --version --debug
-- docker-compose version
-- pip -V
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - export DISPLAY=:99.0
+  #
+  - |
+    if [ ! -f ${HOME}/.local/daggerok/bash-functions/master/main.bash ] ; then
+      mkdir -p ${HOME}/.local/daggerok/bash-functions/master ;
+      curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash > ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+    fi
+    source ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+  - stop_any 80 5432 8080
+  #
+  - export PATH=$HOME/.local/bin:$PATH
+  - pip -V
+  - docker-compose version
+  - pip3 install --user --upgrade pip
+  - pip install --user --upgrade httpie docker-compose
+  - http --version --debug
+  - pip -V
 jobs:
   include:
   - stage: test
@@ -69,8 +78,8 @@ jobs:
       done ;
       echo '' ;
     - echo ready...
-    - http :8100/speakers name=max                  | jq '.'
-    - http :8099/sessions name=maximum speakers=max | jq '.'
+    - http :8100/speakers name=max
+    - http :8099/sessions name=maximum speakers=max
     - http :8098
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-down
     #
@@ -84,8 +93,8 @@ jobs:
     - docker service ls --format '{{.Replicas}} {{.Name}}'
     - docker stack ls
     script:
-    - http :8100/speakers name=max                  | jq '.'
-    - http :8099/sessions name=maximum speakers=max | jq '.'
+    - http :8100/speakers name=max
+    - http :8099/sessions name=maximum speakers=max
     - http :8098
     after_script:
     - docker stack rm step7
@@ -102,8 +111,8 @@ jobs:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Ppg-stop
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-create
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-up
-    - http :8097/speakers name=max                  | jq '.'
-    - http :8096/sessions name=maximum speakers=max | jq '.'
+    - http :8097/speakers name=max
+    - http :8096/sessions name=maximum speakers=max
     - http :8095
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-down
   - stage: test
@@ -136,9 +145,9 @@ jobs:
     - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres-fabric8/ docker:build docker:start
     - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step3-sessions-rsocket-service-fabric8,:step3-speakers-rest-api-service-fabric8,:step3-frontend-fabric8 clean package docker:build docker:start
     - wait_for 8086 8087 8088
-    - http :8086/actuator/health | jq '.'
-    - http :8087/actuator/health | jq '.'
-    - http :8088/actuator/health | jq '.'
+    - http :8086/actuator/health
+    - http :8087/actuator/health
+    - http :8088/actuator/health
     - http :8088/speakers name=max
     - http :8087/sessions name=maximum speakers=max
     - http :8086
@@ -173,13 +182,13 @@ jobs:
     - java -jar $TRAVIS_BUILD_DIR/step1-frontend/target/*.jar &
     - wait_for 8082 8081 8080
     - http :8080 || echo oops... might fail expected
-    - http :8082/actuator/health | jq '.'
-    - http :8081/actuator/health | jq '.'
+    - http :8082/actuator/health
+    - http :8081/actuator/health
     - http :8080/actuator/health | jq '.'
     - http :8080 || echo oops... might fail expected
     #- http :8082
-    #- http :8082/speakers name=max | jq '.'
-    #- http :8082/speakers name=bax | jq '.'
+    #- http :8082/speakers name=max
+    #- http :8082/speakers name=bax
     #- http :8082/speakers | jq '.'
     - stop_any 8082 8081 8080
   - stage: test
