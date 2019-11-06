@@ -210,6 +210,7 @@ For further reference, please consider the following sections:
 * [Spring Boot Google JIB](https://github.com/GoogleContainerTools/jib/tree/master/examples/spring-boot)
 * [Google JIB FAQ](https://github.com/GoogleContainerTools/jib/blob/master/docs/faq.md)
 * [jib-maven-plugin](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin)
+* [YouTube: Speedy build for your java application images with JIB! by Mohammed Aboullaite](https://www.youtube.com/watch?v=bkC1spGOI7Y)
 * [No fat jars with jib](https://phauer.com/2019/no-fat-jar-in-docker-image/)
 * [Docker Swarm getting started guide](https://docs.docker.com/engine/swarm/stack-deploy/)
 * [Docker Swarm -> k8s](https://hackernoon.com/a-kubernetes-guide-for-docker-swarm-users-c14c8aa266cc)
