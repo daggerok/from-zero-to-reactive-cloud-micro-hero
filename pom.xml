@@ -84,9 +84,9 @@
 
         <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
         <r2dbc-postgresql.version>0.8.0.RC2</r2dbc-postgresql.version>
-        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
 
-        <webjars-locator.version>0.37</webjars-locator.version>
+        <webjars-locator.version>0.38</webjars-locator.version>
         <Semantic-UI.version>2.4.1</Semantic-UI.version>
         <vavr.version>0.10.2</vavr.version>
     </properties>
