@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/daggerok/from-zero-to-reactive-cloud-micro-hero#readme",
   "devDependencies": {
-    "cross-env": "6.0.3",
+    "cross-env": "7.0.0",
     "markdown-it-vuepress-code-snippet-enhanced": "1.0.1",
     "vuepress": "1.2.0"
   }

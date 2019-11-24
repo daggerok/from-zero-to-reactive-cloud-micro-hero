@@ -12,6 +12,7 @@
         <ignoreVersion type="regex">(?i).*RC(?:-?\d+)?</ignoreVersion>
         <ignoreVersion type="regex">(?i).*CR(?:-?\d+)?</ignoreVersion>
         <ignoreVersion type="regex">(?i).*M(?:-?\d+)?</ignoreVersion>
+        <ignoreVersion type="regex">(?i).M(?:-?\d+)?</ignoreVersion>
     </ignoreVersions>
     <rules>
         <rule groupId="io.vavr" comparisonMethod="maven">
