@@ -68,7 +68,7 @@
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
 
-        <frontend-maven-plugin.version>1.8.0</frontend-maven-plugin.version>
+        <frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
         <frontend-maven-plugin.npmVersion>6.11.3</frontend-maven-plugin.npmVersion>
         <frontend-maven-plugin.nodeVersion>v12.11.1</frontend-maven-plugin.nodeVersion>
 
@@ -78,13 +78,13 @@
 
         <jib-maven-plugin.version>1.7.0</jib-maven-plugin.version>
         <docker-compose-maven-plugin.version>2.5.1</docker-compose-maven-plugin.version>
-        <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
+        <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
         <postgres.image>healthcheck/postgres:alpine</postgres.image>
         <openjdk.image>openjdk:8u212-jre-alpine</openjdk.image>
 
         <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
-        <r2dbc-postgresql.version>0.8.0.RC2</r2dbc-postgresql.version>
-        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+        <r2dbc-postgresql.version>0.8.0.RELEASE</r2dbc-postgresql.version>
+        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
 
         <webjars-locator.version>0.38</webjars-locator.version>
         <Semantic-UI.version>2.4.1</Semantic-UI.version>
