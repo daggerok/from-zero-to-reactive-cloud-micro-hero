@@ -192,6 +192,7 @@ Documentation is located [here](https://daggerok.github.io/from-zero-to-reactive
 ## Resources
 For further reference, please consider the following sections:
 
+* [GitHub: daggerok/k8s-nginx-ingress-example](https://github.com/daggerok/k8s-nginx-ingress-example)
 * [YouTube: Kubernetes Master Class: Kubernetes from Zero to Hero](https://www.youtube.com/watch?v=srQJq1gJXRw)
 * [YouTube: k3s -- The Lightweight Kubernetes Distribution Built for the Edge](https://www.youtube.com/watch?v=WYPd7i15XOg)
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
