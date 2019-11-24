@@ -8,13 +8,10 @@ git:
   depth: false
 jdk: openjdk11
 node_js: lts/*
-services:
-  - docker
-  - xvfb
-python: 3.7
-matrix:
-  include:
-    - python: 3.7
+language: python
+python: 3.8
+os: linux
+arch: amd64
 addons:
   apt:
     update: false
@@ -28,8 +25,9 @@ addons:
       - libappindicator1
       - fonts-liberation
       - google-chrome-stable
-      - python3-setuptools
-      - python3-pip
+services:
+  - docker
+  - xvfb
 install: true
 before_install:
   - export CHROME_BIN=/usr/bin/google-chrome
@@ -43,13 +41,7 @@ before_install:
     source ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
   - stop_any 80 5432 8080
   #
-  - export PATH=$HOME/.local/bin:$PATH
-  - pip -V
-  - docker-compose version
-  - pip3 install --user --upgrade pip
-  - pip install --user --upgrade httpie docker-compose
-  - http --version --debug
-  - pip -V
+  - python -m pip install --upgrade pip setuptools docker-compose pyopenssl httpie
 jobs:
   include:
   - stage: test
