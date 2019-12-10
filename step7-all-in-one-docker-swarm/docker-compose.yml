@@ -1,0 +1,106 @@
+version: '3'
+#networks:
+#  step7-all-in-one-docker-swarm:
+#    driver: bridge
+services:
+  postgres:
+    image: postgres:alpine
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+    ports: ['5432:5432']
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+#    networks:
+#      step7-all-in-one-docker-swarm:
+#        aliases:
+#          - postgres
+#          - postgres.step7-all-in-one-docker-swarm
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: pg_isready -h 127.0.0.1 -p $$POSTGRES_PORT -d $$POSTGRES_DB -U $$POSTGRES_USER
+  step7-sessions-rsocket-service-swarm:
+    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-sessions-rsocket-service-swarm:1.0.0-SNAPSHOT
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+#    volumes: ['./step7-sessions-rsocket-service-swarm/target:/tmp']
+#    entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['8099:8099']
+    environment:
+      SERVER_PORT: 8099
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on: [postgres]
+#    networks:
+#      step7-all-in-one-docker-swarm:
+#        aliases:
+#          - step7-sessions-rsocket-service-swarm
+#          - step7-sessions-rsocket-service-swarm.step7-all-in-one-docker-swarm
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  step7-speakers-rest-api-service-swarm:
+    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-speakers-rest-api-service-swarm:1.0.0-SNAPSHOT
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+#    volumes: ['./step7-speakers-rest-api-service-swarm/target:/tmp']
+#    entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['8100:8100']
+    environment:
+      SERVER_PORT: 8100
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on: [postgres]
+#    networks:
+#      step7-all-in-one-docker-swarm:
+#        aliases:
+#          - step7-speakers-rest-api-service-swarm
+#          - step7-speakers-rest-api-service-swarm.step7-all-in-one-docker-swarm
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  step7-frontend-swarm:
+    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-frontend-swarm:1.0.0-SNAPSHOT
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+#    volumes: ['./step7-frontend-swarm/target:/tmp']
+#    entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['8098:8098']
+    environment:
+      SERVER_PORT: 8098
+      SESSIONS_HOST: step7-sessions-rsocket-service-swarm
+      SESSIONS_PORT: 8099
+      SPEAKERS_HOST: step7-speakers-rest-api-service-swarm
+      SPEAKERS_PORT: 8100
+    depends_on:
+      - step7-sessions-rsocket-service-swarm
+      - step7-speakers-rest-api-service-swarm
+#    networks:
+#      step7-all-in-one-docker-swarm:
+#        aliases:
+#          - step7-frontend-swarm
+#          - step7-frontend-swarm.step7-all-in-one-docker-swarm
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  healthcheck: # really, not needed, just for CI in our case...
+    image: busybox
+    depends_on: [step7-frontend-swarm]
+    entrypoint: ash -c 'echo Ready...'

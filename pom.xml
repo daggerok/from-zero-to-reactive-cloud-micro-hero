@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>${project.artifactId}</name>
+    <groupId>com.github.daggerok.hero</groupId>
+    <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
+    <version>1.0.1</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>step1-speakers-rest-api-service</module>
+        <module>step1-sessions-rsocket-service</module>
+        <module>step1-frontend</module>
+
+        <module>step2-docker</module>
+        <module>step2-speakers-rest-api-service</module>
+        <module>step2-sessions-rsocket-service</module>
+        <module>step2-frontend</module>
+
+        <module>step3-postgres-fabric8</module>
+        <module>step3-speakers-rest-api-service-fabric8</module>
+        <module>step3-sessions-rsocket-service-fabric8</module>
+        <module>step3-frontend-fabric8</module>
+
+        <module>step4-all-in-one-fabric8</module>
+        <module>step5-all-in-one-docker-compose</module>
+        <module>step6-all-in-one-google-jib</module>
+        <module>step7-all-in-one-docker-swarm</module>
+    </modules>
+
+    <developers>
+        <developer>
+            <name>Maksim Kostromin</name>
+            <email>daggerok@gmail.com</email>
+            <organization>Sets of open source Maksim Kostromin aka daggerok projects</organization>
+            <organizationUrl>https://github.com/daggerok/</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/daggerok/from-zero-to-reactive-cloud-micro-hero/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Maksim Kostromin aka daggerok open source projects sets</name>
+        <url>https://github.com/daggerok/</url>
+    </organization>
+
+    <scm>
+        <developerConnection>scm:git:git@github.com:daggerok/from-zero-to-reactive-cloud-micro-hero.git</developerConnection>
+        <connection>scm:git:https://github.com/daggerok/from-zero-to-reactive-cloud-micro-hero.git</connection>
+        <url>https://github.com/daggerok/from-zero-to-reactive-cloud-micro-hero</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <encoding>UTF-8</encoding>
+        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
+
+        <frontend-maven-plugin.version>1.8.0</frontend-maven-plugin.version>
+        <frontend-maven-plugin.npmVersion>6.11.3</frontend-maven-plugin.npmVersion>
+        <frontend-maven-plugin.nodeVersion>v12.11.1</frontend-maven-plugin.nodeVersion>
+
+        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+
+        <jib-maven-plugin.version>1.7.0</jib-maven-plugin.version>
+        <docker-compose-maven-plugin.version>2.5.1</docker-compose-maven-plugin.version>
+        <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
+        <postgres.image>healthcheck/postgres:alpine</postgres.image>
+        <openjdk.image>openjdk:8u212-jre-alpine</openjdk.image>
+
+        <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
+        <r2dbc-postgresql.version>0.8.0.RC2</r2dbc-postgresql.version>
+        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+
+        <webjars-locator.version>0.38</webjars-locator.version>
+        <Semantic-UI.version>2.4.1</Semantic-UI.version>
+        <vavr.version>0.10.2</vavr.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot.experimental</groupId>
+                <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+                <version>${spring-boot-starter-data-r2dbc.version}</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>io.r2dbc</groupId>
+                <artifactId>r2dbc-postgresql</artifactId>
+                <version>${r2dbc-postgresql.version}</version>
+                <type>jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>io.vavr</groupId>
+                <artifactId>vavr</artifactId>
+                <version>${vavr.version}</version>
+                <type>jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>webjars-locator</artifactId>
+                <version>${webjars-locator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>Semantic-UI</artifactId>
+                <version>${Semantic-UI.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <defaultGoal>package</defaultGoal>
+        
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>install node and npm</id>
+                            <goals>
+                                <goal>install-node-and-npm</goal>
+                            </goals>
+                            <phase>process-resources</phase>
+                        </execution>
+                        <execution>
+                            <id>npm install</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>install</arguments>
+                            </configuration>
+                            <phase>process-resources</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <npmVersion>${frontend-maven-plugin.npmVersion}</npmVersion>
+                        <nodeVersion>${frontend-maven-plugin.nodeVersion}</nodeVersion>
+                        <workingDirectory>${maven.multiModuleProjectDirectory}/docs</workingDirectory>
+                        <installDirectory>${maven.multiModuleProjectDirectory}/target</installDirectory>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <configuration>
+                        <executable>true</executable>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>build-info</id>
+                            <goals><goal>build-info</goal></goals>
+                        </execution>
+                        <execution>
+                            <id>repackage</id>
+                            <goals><goal>repackage</goal></goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker-maven-plugin.version}</version>
+                    <configuration>
+                        <follow>false</follow>
+                        <verbose>true</verbose>
+                        <useColor>true</useColor>
+                        <logDate>default</logDate>
+                        <autoPull>always</autoPull>
+                        <keepRunning>false</keepRunning>
+                        <watchInterval>500</watchInterval>
+                        <allContainers>true</allContainers>
+                        <removeVolumes>true</removeVolumes>
+                        <imagePullPolicy>IfNotPresent</imagePullPolicy>
+                        <autoCreateCustomNetworks>false</autoCreateCustomNetworks>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.dkanejs.maven.plugins</groupId>
+                    <artifactId>docker-compose-maven-plugin</artifactId>
+                    <version>${docker-compose-maven-plugin.version}</version>
+                    <configuration>
+                        <detail>true</detail>
+                        <verbose>false</verbose>
+                        <detachedMode>true</detachedMode>
+                        <ignorePullFailures>true</ignorePullFailures>
+                        <removeImagesType>local</removeImagesType>
+                        <removeImages>true</removeImages>
+                        <removeOrphans>true</removeOrphans>
+                        <removeVolumes>true</removeVolumes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>versions</id>
+            <build>
+                <defaultGoal>versions:display-property-updates</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>${versions-maven-plugin.version}</version>
+                        <configuration>
+                            <!--
+                              Preferences | Build, Execution, Deployment | Build Tools | Maven | Runner | VM Options:
+                              -Dmaven.multiModuleProjectDirectory=$M2_HOME
+                            -->
+                            <rulesUri>file:///${maven.multiModuleProjectDirectory}/.mvn/versions-maven-plugin-rules.xml</rulesUri>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>display-dependency-updates</goal>
+                                    <goal>display-property-updates</goal>
+                                    <goal>display-plugin-updates</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>npm-run-build</id>
+            <build>
+                <defaultGoal>process-resources</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>npm run build</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run build</arguments>
+                                </configuration>
+                                <phase>process-resources</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>npm-run-gh-pages</id>
+            <build>
+                <defaultGoal>process-resources</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>npm run gh-pages</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run gh-pages</arguments>
+                                </configuration>
+                                <phase>process-resources</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <!-- r2dbc -->
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

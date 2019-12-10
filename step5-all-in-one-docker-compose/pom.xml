@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
+        <groupId>com.github.daggerok.hero</groupId>
+        <version>1.0.1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>${project.artifactId}</name>
+    <groupId>com.github.daggerok.hero.step5</groupId>
+    <artifactId>step5-all-in-one-docker-compose</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>step5-sessions-rsocket-service</module>
+        <module>step5-speakers-rest-api-service</module>
+        <module>step5-frontend</module>
+    </modules>
+
+    <properties>
+        <postgres-port>5432</postgres-port>
+        <postgres-host>step5-postgres</postgres-host>
+        <docker-repository>daggerok</docker-repository>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.dkanejs.maven.plugins</groupId>
+                <artifactId>docker-compose-maven-plugin</artifactId>
+                <configuration>
+                    <composeFiles>
+                        <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                    </composeFiles>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+                    <images>
+                        <!--
+                        start postgres before test
+                        ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:build docker:start
+                        ./mvnw test
+                        ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
+                        -->
+                        <image>
+                            <name>${docker-repository}/${postgres-host}:${project.version}</name>
+                            <alias>${postgres-host}</alias>
+                            <build>
+                                <from>postgres:alpine</from>
+                                <ports>
+                                    <port>${postgres-port}</port>
+                                </ports>
+                                <env>
+                                    <POSTGRES_DB>postgres</POSTGRES_DB>
+                                    <POSTGRES_USER>postgres</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
+                                    <POSTGRES_PORT>${postgres-port}</POSTGRES_PORT>
+                                    <POSTGRES_HOST>${postgres-host}.${project.artifactId}</POSTGRES_HOST>
+                                </env>
+                                <healthCheck>
+                                    <retries>9</retries>
+                                    <timeout>3s</timeout>
+                                    <interval>3s</interval>
+                                    <startPeriod>3s</startPeriod>
+                                    <cmd>pg_isready -h 127.0.0.1 -p ${postgres-port} -d $$POSTGRES_DB -U $$POSTGRES_USER</cmd>
+                                </healthCheck>
+                            </build>
+                            <run>
+                                <autoRemove>false</autoRemove>
+                                <hostname>${postgres-host}</hostname>
+                                <network>
+                                    <mode>custom</mode>
+                                    <name>${project.artifactId}</name>
+                                    <alias>${postgres-host}</alias>
+                                    <alias>${postgres-host}.${project.artifactId}</alias>
+                                </network>
+                                <ports>
+                                    <port>${postgres-port}:${postgres-port}</port>
+                                </ports>
+                                <wait>
+                                    <time>35000</time>
+                                    <healthy>true</healthy>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

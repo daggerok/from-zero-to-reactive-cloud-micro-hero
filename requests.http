@@ -1,0 +1,95 @@
+POST http://127.0.0.1:8081/sessions
+Content-Type: application/json
+
+{
+  "name": "Session"
+}
+
+###
+POST http://127.0.0.1:8082/speakers
+Content-Type: application/json
+
+{
+  "name": "Max"
+}
+
+###
+GET http://127.0.0.1:8080/
+
+#####################################################
+POST http://127.0.0.1:8085/speakers
+Content-Type: application/json
+
+{
+  "name": "Max"
+}
+
+###
+POST http://127.0.0.1:8084/sessions
+Content-Type: application/json
+
+{
+  "name": "Maximum!",
+  "speakers": "Max!"
+}
+
+###
+GET http://127.0.0.1:8083/
+
+#####################################################
+POST http://127.0.0.1:8088/speakers
+Content-Type: application/json
+
+{
+  "name": "Max"
+}
+
+###
+POST http://127.0.0.1:8087/sessions
+Content-Type: application/json
+
+{
+  "name": "Maximum!",
+  "speakers": "Max!111oneone"
+}
+
+###
+GET http://127.0.0.1:8087/sessions
+
+###
+GET http://127.0.0.1:8086/
+
+#####################################################
+POST http://127.0.0.1:8090/sessions
+Content-Type: application/json
+
+{
+  "name": "Maximum!",
+  "speakers": "Max!111oneone"
+}
+
+###
+GET http://127.0.0.1:8090/sessions
+
+###
+POST http://127.0.0.1:8091/speakers
+Content-Type: application/json
+
+{
+  "id": "00000000-0000-0000-0000-000000000123",
+  "name": "Maksimko"
+}
+
+###
+POST http://127.0.0.1:8091/speakers
+Content-Type: application/json
+
+{
+  "name": "Maksim"
+}
+
+###
+GET http://127.0.0.1:8091/speakers
+
+###
+GET http://127.0.0.1:8089/

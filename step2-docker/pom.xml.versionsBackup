@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
+        <groupId>com.github.daggerok.hero</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>${project.artifactId}</name>
+    <groupId>com.github.daggerok.hero.step2</groupId>
+    <artifactId>step2-docker</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
+        <!-- docker postgres -->
+        <postgres.docker.name>${postgres.image}</postgres.docker.name>
+        <postgres.docker.log.prefix>postgres</postgres.docker.log.prefix>
+        <postgres.docker.ports.1>5432:5432</postgres.docker.ports.1>
+        <postgres.docker.env.POSTGRES_DB>postgres</postgres.docker.env.POSTGRES_DB>
+        <postgres.docker.env.POSTGRES_USER>postgres</postgres.docker.env.POSTGRES_USER>
+        <postgres.docker.env.POSTGRES_PASSWORD>postgres</postgres.docker.env.POSTGRES_PASSWORD>
+        <postgres.docker.wait.time>10000</postgres.docker.wait.time>
+        <postgres.docker.wait.log>PostgreSQL init process complete</postgres.docker.wait.log>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- postgres in docker:
+                ./mvnw -pl :step2-docker docker:start
+                ...do some testing...
+                ./mvnw -pl :step2-docker docker:stop
+            -->
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <images>
+                        <image>
+                            <external>
+                                <type>properties</type>
+                                <prefix>postgres.docker</prefix>
+                            </external>
+                            <run>
+                                <restartPolicy>
+                                    <name>always</name>
+                                </restartPolicy>
+                                <ports>
+                                    <port>5432:5432</port>
+                                </ports>
+                                <wait>
+                                    <tcp>
+                                        <mode>mapped</mode>
+                                        <ports>
+                                            <port>5432</port>
+                                        </ports>
+                                    </tcp>
+                                    <time>6000</time>
+                                    <healthy>true</healthy>
+                                    <kill>500</kill>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,225 @@
+env:
+  global:
+    secure: "Mc+HCf8MmK28kZwaZ7YZox9qAlCP81pLLQVQMCH9yxCwFBUJlxO0+jsimoMhe6K9hi0WE1pS6Qa6+v0GdZ0+FmIlX1sQh5X64NCjCZHY3lcnFoPI8FSspgp0jRNd0Y1DPBWeLsuM2kmw9oaeQ8kqR7RYXLvkEHYfqbip1RkPRzfTJnB9OCdxWGfPrahD5idRyx2dfhw176vGF8h5aeTaajNvLhBGae2OerbEO0S4tf0jGUTVOJSPCJo2tcaCFIUcS+4fgNkqace4vtY7ZgJUstPpG6Ajj5lHFhfjEQrXlsn5Wv5eflvrO8XkXPGGC9Ttbqx/+zOwPxbjlneDEP6QyEfduxOzvLWM6TV8spNbI9z+X+dkRMovl5zgZrY9PzsM/cBcg3GS3rMUVrCHuJWNxcsX6oihKg4Dso8LZrvQXpmG4Ucgq4vbF+pzRI2frzuwW4SoddiKfz2cGrihkso0+nnuWe1a7NzjJzVR1oq6yA5GV4WWFIJT56OJ8Ta4y4dAKbgIhg7YFHfahfvc62B5BElxa9TtBIkud1sLDN2l6VEhso2sFpywQxbNXfLTV7GA4NIGAUPLf4qzBNE1kNkjaX6sdfY6MvzCyfWmui+KgZxRSZeUJ2bboP/0l0vuuDzLUlUUeqom8aGJfuQbXnGhld1vzqtvmc2DSLIEJ1v8V6c="
+notifications:
+  email: false
+git:
+  quiet: true
+  depth: false
+jdk: openjdk11
+node_js: lts/*
+language: python
+python: 3.8
+os: linux
+arch: amd64
+addons:
+  apt:
+    packages:
+      - jq
+      - bash
+      - curl
+      - tree
+      - docker-ce
+      - libxml2-utils
+      - libappindicator1
+      - fonts-liberation
+      - google-chrome-stable
+services:
+  - docker
+  - xvfb
+install: true
+before_install:
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - export DISPLAY=:99.0
+  #
+  - |
+    if [ ! -f ${HOME}/.local/daggerok/bash-functions/master/main.bash ] ; then
+      mkdir -p ${HOME}/.local/daggerok/bash-functions/master ;
+      curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash > ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+    fi
+    source ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
+  - stop_any 80 5432 8080
+  #
+  - python -m pip install --upgrade pip setuptools docker-compose pyopenssl httpie
+jobs:
+  include:
+  - stage: test
+    jdk: openjdk11
+    name: test step7
+    before_script:
+    - docker swarm init
+    #- docker service create --name=viz
+    #                        --publish=80:8080/tcp
+    #                        --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock
+    #                        dockersamples/visualizer
+    - docker service create --name registry --publish published=5000,target=5000 registry:2
+    #
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step7-all-in-one-docker-swarm
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-stop
+    #
+    - http :5000/v2/_catalog | jq '.'
+    #
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-create
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-up
+    - |
+      while [[ $(docker ps -q --filter health=healthy -f status=running | wc -l) -lt 4 ]] ; do
+        sleep 0.3s ;
+        echo -n '.' ;
+      done ;
+      echo '' ;
+    - echo ready...
+    - http :8100/speakers name=max
+    - http :8099/sessions name=maximum speakers=max
+    - http :8098
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-down
+    #
+    - docker stack deploy --compose-file $TRAVIS_BUILD_DIR/step7-all-in-one-docker-swarm/docker-compose.yml step7
+    - docker service ls --format '{{.Replicas}} {{.Name}}'
+    - while [[ $(docker ps -q --filter health=healthy -f status=running | wc -l) -lt 4 ]] ; do
+        echo -n '.' ;
+        sleep 1s ;
+      done ;
+    - echo "ready!"
+    - docker service ls --format '{{.Replicas}} {{.Name}}'
+    - docker stack ls
+    script:
+    - http :8100/speakers name=max
+    - http :8099/sessions name=maximum speakers=max
+    - http :8098
+    after_script:
+    - docker stack rm step7
+    #- docker service rm viz
+    - docker service rm registry
+    - docker network rm $(docker network ls --filter label=com.docker.compose.project -q)
+    - docker swarm leave --force
+  - stage: test
+    jdk: openjdk11
+    name: test step6
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Ppg-start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step6-all-in-one-google-jib
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Ppg-stop
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-create
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-up
+    - http :8097/speakers name=max
+    - http :8096/sessions name=maximum speakers=max
+    - http :8095
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step6-all-in-one-google-jib -Pcompose-down
+  - stage: test
+    jdk: openjdk11
+    name: test step5
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:build docker:start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:up
+    - http :8094/speakers name=max                  | jq '.'
+    - http :8093/sessions name=maximum speakers=max | jq '.'
+    - http :8092 || echo oops...
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:down
+  - stage: test
+    jdk: openjdk11
+    name: test step4
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one-fabric8 clean package -DskipTests
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:build docker:start
+    - http :8091/speakers name=max
+    - http :8090/sessions name=maximum speakers=max
+    - http :8089
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step4-all-in-one-fabric8 -pl :step4-all-in-one-fabric8 docker:stop docker:remove
+    - stop_any 5432 8089 8090 8091
+  - stage: test
+    jdk: openjdk11
+    name: test step3
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres-fabric8/ docker:build docker:start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step3-sessions-rsocket-service-fabric8,:step3-speakers-rest-api-service-fabric8,:step3-frontend-fabric8 clean package docker:build docker:start
+    - wait_for 8086 8087 8088
+    - http :8086/actuator/health
+    - http :8087/actuator/health
+    - http :8088/actuator/health
+    - http :8088/speakers name=max
+    - http :8087/sessions name=maximum speakers=max
+    - http :8086
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step3-speakers-rest-api-service-fabric8,:step3-sessions-rsocket-service-fabric8,:step3-frontend-fabric8 docker:stop docker:remove
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -f step3-postgres-fabric8/ docker:stop docker:remove
+    - stop_any 8086 8087 8088 5432
+  - stage: test
+    jdk: openjdk11
+    name: test step2
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step2-docker docker:start
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step2-frontend,:step2-sessions-rsocket-service,:step2-speakers-rest-api-service
+    - java -jar $TRAVIS_BUILD_DIR/step2-speakers-rest-api-service/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step2-sessions-rsocket-service/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step2-frontend/target/*.jar &
+    - wait_for 8085 8084 8083
+    - http :8085/actuator/health | jq '.'
+    - http :8084/actuator/health | jq '.'
+    - http :8083/actuator/health | jq '.'
+    - http :8085/speakers name=max
+    - http :8084/sessions name=maximum speakers=max
+    - http :8083
+    - stop_any 8085 8084 8083
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step2-docker docker:stop
+  - stage: test
+    jdk: openjdk11
+    name: test step1
+    script:
+    - cd $TRAVIS_BUILD_DIR && ./mvnw -DskipTests >/dev/null
+    - java -jar $TRAVIS_BUILD_DIR/step1-speakers-rest-api-service/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step1-sessions-rsocket-service/target/*.jar &
+    - java -jar $TRAVIS_BUILD_DIR/step1-frontend/target/*.jar &
+    - wait_for 8082 8081 8080
+    - http :8080 || echo oops... might fail expected
+    - http :8082/actuator/health
+    - http :8081/actuator/health
+    - http :8080/actuator/health | jq '.'
+    - http :8080 || echo oops... might fail expected
+    #- http :8082
+    #- http :8082/speakers name=max
+    #- http :8082/speakers name=bax
+    #- http :8082/speakers | jq '.'
+    - stop_any 8082 8081 8080
+  - stage: test
+    jdk: openjdk11
+    name: mvn
+    before_script: cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step2-docker docker:start
+    script: cd $TRAVIS_BUILD_DIR && ./mvnw
+    after_script: cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step2-docker docker:stop
+  - stage: test
+    jdk: openjdk11
+    name: versions display-property-updates
+    script: ./mvnw -P versions
+  - stage: test
+    jdk: openjdk11
+    name: npm run build
+    script: ./mvnw -pl :from-zero-to-reactive-cloud-micro-hero -P npm-run-build
+  - stage: deploy
+    jdk: openjdk11
+    name: GitHub Pages
+    script: skip
+    before_deploy:
+    - set -e
+    - mkdir -p ${HOME}/.m2
+    - ./mvnw -pl :from-zero-to-reactive-cloud-micro-hero -P npm-run-gh-pages
+    deploy: &pages
+      provider: pages
+      skip-cleanup: true
+      github-token: "$GITHUB_TOKEN"
+      keep-history: true
+      local-dir: docs/.vuepress/dist
+      target_branch: gh-pages
+      on:
+        branch: master
+        condition: "$TRAVIS_PULL_REQUEST = false"
+cache:
+  npm: true
+  pip: true
+  packages: true
+  directories:
+  - ~/.m2
+  - ~/.docker
+  - ~/.local/daggerok
+  - .vuepress/node_modules

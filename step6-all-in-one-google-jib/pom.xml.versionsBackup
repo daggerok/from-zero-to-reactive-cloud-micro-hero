@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
+        <groupId>com.github.daggerok.hero</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>${project.artifactId}</name>
+    <groupId>com.github.daggerok.hero.step6</groupId>
+    <artifactId>step6-all-in-one-google-jib</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>step6-sessions-rsocket-service-jib</module>
+        <module>step6-speakers-rest-api-service-jib</module>
+        <module>step6-frontend-jib</module>
+    </modules>
+
+    <properties>
+        <postgres-port>5432</postgres-port>
+        <postgres-host>postgres</postgres-host>
+
+        <frontend-port>8095</frontend-port>
+        <frontend-host>step6-frontend-jib</frontend-host>
+
+        <sessions-port>8096</sessions-port>
+        <sessions-host>step6-sessions-rsocket-service-jib</sessions-host>
+
+        <speakers-port>8097</speakers-port>
+        <speakers-host>step6-speakers-rest-api-service-jib</speakers-host>
+
+        <docker-repository>daggerok</docker-repository>
+    </properties>
+
+    <build>
+        <!--<defaultGoal>docker:build docker:start</defaultGoal>-->
+        <!--<defaultGoal>test</defaultGoal>-->
+        <!--<defaultGoal>docker:stop docker:remove</defaultGoal>-->
+        <defaultGoal>clean package jib:dockerBuild</defaultGoal>
+        <!--<defaultGoal>docker-compose:up</defaultGoal>-->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>${jib-maven-plugin.version}</version>
+                    <configuration>
+                        <!-- start:fatJar - just remove that and use default jib! -->
+                        <containerizingMode>packaged</containerizingMode>
+                        <container>
+                            <appRoot>/tmp</appRoot>
+                            <useCurrentTimestamp>true</useCurrentTimestamp>
+                            <entrypoint>
+                                <shell>ash</shell>
+                                <option>-c</option>
+                                <arg>java -jar /tmp/classpath/*.jar</arg>
+                            </entrypoint>
+                        </container>
+                        <!-- end:fatJar -->
+                        <from>
+                            <image>openjdk:8u212-jre-alpine</image>
+                        </from>
+                        <to>
+                            <image>${docker-repository}/${project.parent.artifactId}-${project.artifactId}:${project.version}</image>
+                        </to>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.dkanejs.maven.plugins</groupId>
+                    <artifactId>docker-compose-maven-plugin</artifactId>
+                    <configuration>
+                        <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+                    <images>
+                        <image>
+                            <name>${docker-repository}/${postgres-host}:${project.version}</name>
+                            <alias>${postgres-host}</alias>
+                            <build>
+                                <from>postgres:alpine</from>
+                                <ports>
+                                    <port>${postgres-port}</port>
+                                </ports>
+                                <env>
+                                    <POSTGRES_DB>postgres</POSTGRES_DB>
+                                    <POSTGRES_USER>postgres</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
+                                    <POSTGRES_PORT>${postgres-port}</POSTGRES_PORT>
+                                    <POSTGRES_HOST>${postgres-host}.${project.artifactId}</POSTGRES_HOST>
+                                </env>
+                                <healthCheck>
+                                    <retries>9</retries>
+                                    <timeout>3s</timeout>
+                                    <interval>3s</interval>
+                                    <startPeriod>3s</startPeriod>
+                                    <cmd>pg_isready -h 127.0.0.1 -p ${postgres-port} -d $$POSTGRES_DB -U $$POSTGRES_USER</cmd>
+                                </healthCheck>
+                            </build>
+                            <run>
+                                <autoRemove>false</autoRemove>
+                                <hostname>${postgres-host}</hostname>
+                                <network>
+                                    <mode>custom</mode>
+                                    <name>${project.artifactId}</name>
+                                    <alias>${postgres-host}</alias>
+                                    <alias>${postgres-host}.${project.artifactId}</alias>
+                                </network>
+                                <ports>
+                                    <port>${postgres-port}:${postgres-port}</port>
+                                </ports>
+                                <wait>
+                                    <time>35000</time>
+                                    <healthy>true</healthy>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- mvn -pl step6-all-in-one-google-jib -P start-pg  -->
+        <profile>
+            <id>pg-start</id>
+            <build>
+                <defaultGoal>docker:build docker:start</defaultGoal>
+            </build>
+        </profile>
+        <!-- mvn -pl step6-all-in-one-google-jib -P stop-pg  -->
+        <profile>
+            <id>pg-stop</id>
+            <build>
+                <defaultGoal>docker:stop docker:remove</defaultGoal>
+            </build>
+        </profile>
+        <!-- mvn -pl step6-all-in-one-google-jib -P compose -->
+        <profile>
+            <id>compose-create</id>
+            <build>
+                <defaultGoal>resources:resources</defaultGoal>
+                <resources>
+                    <resource>
+                        <directory>./templates</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>${maven-resources-plugin.version}</version>
+                        <configuration>
+                            <delimiters>
+                                <delimiter>${*}</delimiter>
+                            </delimiters>
+                            <outputDirectory>./</outputDirectory>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- mvn -pl step6-all-in-one-google-jib -P up -->
+        <profile>
+            <id>compose-up</id>
+            <build>
+                <defaultGoal>docker-compose:up</defaultGoal>
+            </build>
+        </profile>
+        <!-- mvn -pl step6-all-in-one-google-jib -P down -->
+        <profile>
+            <id>compose-down</id>
+            <build>
+                <defaultGoal>docker-compose:down</defaultGoal>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

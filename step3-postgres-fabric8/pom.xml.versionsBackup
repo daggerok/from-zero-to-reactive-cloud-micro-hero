@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--
+        available goals:
+            docker:build
+            docker:help
+            docker:logs
+            docker:push
+            docker:remove
+            docker:run
+            docker:save
+            docker:source
+            docker:start
+            docker:stop
+            docker:volume-create
+            docker:volume-remove
+            docker:watch
+
+        mvn -f step3-postgres-fabric8/ docker:build
+        mvn -f step3-postgres-fabric8/ docker:start
+        mvn -f step3-postgres-fabric8/ docker:stop
+        mvn -f step3-postgres-fabric8/ docker:remove
+    -->
+
+    <parent>
+        <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
+        <groupId>com.github.daggerok.hero</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>${project.artifactId}</name>
+    <groupId>com.github.daggerok.hero.step3</groupId>
+    <artifactId>step3-postgres-fabric8</artifactId>
+    <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <!-- postgres in docker:
+                ./mvnw -pl :step3-postgres-fabric8 docker:build
+                ./mvnw -pl :step4-postgres docker:start
+                ...run other apps and test...
+                ./mvnw -pl :step3-postgres-fabric8 docker:stop
+                ./mvnw -pl :step3-postgres-fabric8 docker:remove
+            -->
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
+                    <images>
+                        <image>
+                            <name>daggerok/${project.artifactId}:${project.version}</name>
+                            <alias>${project.artifactId}</alias>
+                            <build>
+                                <from>${postgres.image}</from>
+                                <labels>
+                                    <maintainer>Maksim Kostromin https://github.com/daggerok</maintainer>
+                                </labels>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                                <ports>
+                                    <port>5432</port>
+                                </ports>
+                                <env>
+                                    <POSTGRES_HOST>step3-postgres-fabric8.${project.parent.artifactId}</POSTGRES_HOST>
+                                    <POSTGRES_PORT>5432</POSTGRES_PORT>
+                                    <POSTGRES_DB>postgres</POSTGRES_DB>
+                                    <POSTGRES_USER>postgres</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
+                                </env>
+                            </build>
+                            <run>
+                                <imagePullPolicy>Never</imagePullPolicy>
+                                <hostname>${project.artifactId}</hostname>
+                                <network>
+                                    <!--<mode>hostcustom</mode>
+                                    <mode>bridge</mode>
+                                    -->
+                                    <mode>custom</mode>
+                                    <name>${project.parent.artifactId}</name>
+                                    <alias>${project.artifactId}</alias>
+                                    <alias>${project.artifactId}.${project.parent.artifactId}</alias>
+                                </network>
+                                <!--<restartPolicy>
+                                    <name>always</name>
+                                </restartPolicy>-->
+                                <ports>
+                                    <port>5432:5432</port>
+                                </ports>
+                                <wait>
+                                    <!--<tcp>
+                                        <mode>mapped</mode>
+                                        <ports>
+                                            <port>5432</port>
+                                        </ports>
+                                    </tcp>
+                                    <kill>500</kill>-->
+                                    <time>60000</time>
+                                    <healthy>true</healthy>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

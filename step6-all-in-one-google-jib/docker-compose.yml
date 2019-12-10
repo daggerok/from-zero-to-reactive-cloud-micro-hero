@@ -1,0 +1,113 @@
+version: '2.1'
+networks:
+  step6-all-in-one-google-jib:
+    driver: bridge
+services:
+  postgres:
+    image: postgres:alpine
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+    ports: ['5432:5432']
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    networks:
+      step6-all-in-one-google-jib:
+        aliases:
+          - postgres
+          - postgres.step6-all-in-one-google-jib
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: pg_isready -h 127.0.0.1 -p $$POSTGRES_PORT -d $$POSTGRES_DB -U $$POSTGRES_USER
+  sessions:
+    image: daggerok/step6-all-in-one-google-jib-step6-sessions-rsocket-service-jib:1.0.0-SNAPSHOT
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+#    volumes: ['./step6-sessions-rsocket-service-jib/target:/tmp']
+#    entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['8096:8096']
+    environment:
+      SERVER_PORT: 8096
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      step6-all-in-one-google-jib:
+        aliases:
+          - step6-sessions-rsocket-service-jib
+          - step6-sessions-rsocket-service-jib.step6-all-in-one-google-jib
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  speakers:
+    image: daggerok/step6-all-in-one-google-jib-step6-speakers-rest-api-service-jib:1.0.0-SNAPSHOT
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+#    volumes: ['./step6-speakers-rest-api-service-jib/target:/tmp']
+#    entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['8097:8097']
+    environment:
+      SERVER_PORT: 8097
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      step6-all-in-one-google-jib:
+        aliases:
+          - step6-speakers-rest-api-service-jib
+          - step6-speakers-rest-api-service-jib.step6-all-in-one-google-jib
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  frontend:
+    image: daggerok/step6-all-in-one-google-jib-step6-frontend-jib:1.0.0-SNAPSHOT
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+#    volumes: ['./step6-frontend-jib/target:/tmp']
+#    entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['8095:8095']
+    environment:
+      SERVER_PORT: 8095
+      SESSIONS_HOST: step6-sessions-rsocket-service-jib
+      SESSIONS_PORT: 8096
+      SPEAKERS_HOST: step6-speakers-rest-api-service-jib
+      SPEAKERS_PORT: 8097
+    depends_on:
+      sessions:
+        condition: service_healthy
+      speakers:
+        condition: service_healthy
+    networks:
+      step6-all-in-one-google-jib:
+        aliases:
+          - step6-frontend-jib
+          - step6-frontend-jib.step6-all-in-one-google-jib
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  healthcheck: # really, not needed, just for CI in our case...
+    image: busybox
+    depends_on:
+      frontend:
+        condition: service_healthy

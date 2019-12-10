@@ -1,0 +1,30 @@
+{
+  "name": "from-zero-to-reactive-cloud-micro-hero",
+  "version": "1.0.0",
+  "description": "Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8s kubernetes",
+  "main": "index.js",
+  "scripts": {
+    "start": "vuepress dev --port 5000 .",
+    "build": "vuepress build --no-cache .",
+    "gh-pages": "cross-env BASE_HREF='/from-zero-to-reactive-cloud-micro-hero/' npm run build",
+    "test": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daggerok/from-zero-to-reactive-cloud-micro-hero.git"
+  },
+  "keywords": [
+    "vuepess"
+  ],
+  "author": "Maksim Kostromin https://github.com/daggerok",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daggerok/from-zero-to-reactive-cloud-micro-hero/issues"
+  },
+  "homepage": "https://github.com/daggerok/from-zero-to-reactive-cloud-micro-hero#readme",
+  "devDependencies": {
+    "cross-env": "6.0.3",
+    "markdown-it-vuepress-code-snippet-enhanced": "1.0.1",
+    "vuepress": "1.2.0"
+  }
+}
