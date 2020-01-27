@@ -7,7 +7,7 @@
     <name>${project.artifactId}</name>
     <groupId>com.github.daggerok.hero</groupId>
     <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <modules>
