@@ -6,7 +6,7 @@
     <parent>
         <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
         <groupId>com.github.daggerok.hero</groupId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -150,6 +150,9 @@
         <!-- mvn -pl step7-all-in-one-docker-swarm -P compose -->
         <profile>
             <id>compose-create</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <defaultGoal>resources:resources</defaultGoal>
                 <resources>
