@@ -173,6 +173,12 @@ docker service rm registry
 docker swarm leave -f
 ```
 
+## Version
+
+```bash
+./mvnw build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}
+```
+
 ## Cleanup
 
 ```bash

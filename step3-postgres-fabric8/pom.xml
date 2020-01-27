@@ -28,7 +28,7 @@
     <parent>
         <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
         <groupId>com.github.daggerok.hero</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
