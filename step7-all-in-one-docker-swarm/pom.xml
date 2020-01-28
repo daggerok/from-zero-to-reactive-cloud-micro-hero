@@ -6,7 +6,7 @@
     <parent>
         <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
         <groupId>com.github.daggerok.hero</groupId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
