@@ -97,7 +97,7 @@
                 <configuration>
                     <images>
                         <image>
-                            <name>daggerok/${project.artifactId}:${project.version}</name>
+                            <name>daggerok/${project.artifactId}</name>
                             <alias>${project.artifactId}</alias>
                             <build>
                                 <from>${openjdk.image}</from>

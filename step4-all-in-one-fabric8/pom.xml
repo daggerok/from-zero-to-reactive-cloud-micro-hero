@@ -48,16 +48,17 @@
                     <images>
                         <!-- step4-postgres -->
                         <image>
-                            <name>${docker-repository}/${postgres-host}:${project.version}</name>
+                            <name>${docker-repository}/${postgres-host}</name>
                             <alias>${postgres-host}</alias>
                             <build>
                                 <from>postgres:alpine</from>
                                 <labels>
                                     <maintainer>${docker-labels-maintainer}</maintainer>
                                 </labels>
-                                <!--<tags>
+                                <tags>
+                                    <tag>latest</tag>
                                     <tag>${project.version}</tag>
-                                </tags>-->
+                                </tags>
                                 <ports>
                                     <port>${postgres-port}</port>
                                 </ports>

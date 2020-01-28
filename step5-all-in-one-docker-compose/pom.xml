@@ -51,9 +51,13 @@
                         ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
                         -->
                         <image>
-                            <name>${docker-repository}/${postgres-host}:${project.version}</name>
+                            <name>${docker-repository}/${postgres-host}</name>
                             <alias>${postgres-host}</alias>
                             <build>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${project.version}</tag>
+                                </tags>
                                 <from>postgres:alpine</from>
                                 <ports>
                                     <port>${postgres-port}</port>
