@@ -25,7 +25,7 @@ services:
       interval: 3s
       test: pg_isready -h 127.0.0.1 -p $$POSTGRES_PORT -d $$POSTGRES_DB -U $$POSTGRES_USER
   step7-sessions-rsocket-service-swarm:
-    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-sessions-rsocket-service-swarm:1.0.0-SNAPSHOT
+    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-sessions-rsocket-service-swarm:1.0.5
     labels:
       MAINTAINER: Maksim Kostromin https://github.com/daggerok
 #    volumes: ['./step7-sessions-rsocket-service-swarm/target:/tmp']
@@ -50,7 +50,7 @@ services:
       interval: 3s
       test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
   step7-speakers-rest-api-service-swarm:
-    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-speakers-rest-api-service-swarm:1.0.0-SNAPSHOT
+    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-speakers-rest-api-service-swarm:1.0.5
     labels:
       MAINTAINER: Maksim Kostromin https://github.com/daggerok
 #    volumes: ['./step7-speakers-rest-api-service-swarm/target:/tmp']
@@ -75,7 +75,7 @@ services:
       interval: 3s
       test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
   step7-frontend-swarm:
-    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-frontend-swarm:1.0.0-SNAPSHOT
+    image: 127.0.0.1:5000/daggerok/step7-all-in-one-docker-swarm-step7-frontend-swarm:1.0.5
     labels:
       MAINTAINER: Maksim Kostromin https://github.com/daggerok
 #    volumes: ['./step7-frontend-swarm/target:/tmp']
