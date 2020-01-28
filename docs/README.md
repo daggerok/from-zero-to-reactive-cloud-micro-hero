@@ -13,6 +13,7 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 * ~~Implemented step5 with docker-compose maven plugin~~
 * ~~Implemented step6 and Dockerize all applications using jib maven plugin from Google~~
 * ~~Implemented step7 with docker-swarm~~
+* TODO: Implement step8 with k8s, jib + skaffold, helm-chart
 
 ## step 1
 Simple sets of applications implementation for local run
@@ -162,6 +163,12 @@ http :8098
 docker stack rm step7
 docker service rm registry
 docker swarm leave --force
+```
+
+## Version
+
+```bash
+./mvnw build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} -DgenerateBackupPoms=false
 ```
 
 ## cleanup

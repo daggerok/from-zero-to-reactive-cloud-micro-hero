@@ -13,7 +13,7 @@ IN PROGRESS
 * ~~Implemented step5 with docker-compose maven plugin~~
 * ~~Implemented step6 and Dockerize all applications using jib maven plugin from Google~~
 * ~~Implemented step7 with docker-swarm~~
-* Implement step8 with k8s, jib + skaffold, helm-chart
+* TODO: Implement step8 with k8s, jib + skaffold, helm-chart
 <!-- * Implement step9 with project riff -->
 
 ## Step 1
