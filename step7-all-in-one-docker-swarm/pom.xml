@@ -6,7 +6,7 @@
     <parent>
         <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
         <groupId>com.github.daggerok.hero</groupId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -63,7 +63,11 @@
                             <image>openjdk:8u212-jre-alpine</image>
                         </from>
                         <to>
-                            <image>localhost:5000/${docker-repository}/${project.parent.artifactId}-${project.artifactId}:${project.version}</image>
+                            <image>localhost:5000/${docker-repository}/${project.parent.artifactId}-${project.artifactId}</image>
+                            <tags>
+                                <tag>latest</tag>
+                                <tag>${project.version}</tag>
+                            </tags>
                         </to>
                     </configuration>
                 </plugin>
@@ -150,9 +154,6 @@
         <!-- mvn -pl step7-all-in-one-docker-swarm -P compose -->
         <profile>
             <id>compose-create</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <build>
                 <defaultGoal>resources:resources</defaultGoal>
                 <resources>
