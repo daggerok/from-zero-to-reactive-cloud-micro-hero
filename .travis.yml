@@ -16,7 +16,6 @@ addons:
   apt:
     update: false
     packages:
-      - jq
       - bash
       - curl
       - tree
@@ -60,7 +59,7 @@ jobs:
         - cd $TRAVIS_BUILD_DIR && ./mvnw -f step7-all-in-one-docker-swarm
         - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Ppg-stop
         #
-        - http :5000/v2/_catalog | jq '.'
+        - http :5000/v2/_catalog
         #
         - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-create
         - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step7-all-in-one-docker-swarm -Pcompose-up
@@ -116,8 +115,8 @@ jobs:
         - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose
         - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker:stop docker:remove
         - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:up
-        - http :8094/speakers name=max                  | jq '.'
-        - http :8093/sessions name=maximum speakers=max | jq '.'
+        - http :8094/speakers name=max
+        - http :8093/sessions name=maximum speakers=max
         - http :8092 || echo oops...
         - cd $TRAVIS_BUILD_DIR && ./mvnw -f step5-all-in-one-docker-compose -pl :step5-all-in-one-docker-compose docker-compose:down
     - stage: test
@@ -157,9 +156,9 @@ jobs:
         - java -jar $TRAVIS_BUILD_DIR/step2-sessions-rsocket-service/target/*.jar &
         - java -jar $TRAVIS_BUILD_DIR/step2-frontend/target/*.jar &
         - wait_for 8085 8084 8083
-        - http :8085/actuator/health | jq '.'
+        - http :8085/actuator/health
         - http :8084/actuator/health
-        - http :8083/actuator/health | jq '.'
+        - http :8083/actuator/health
         - http :8085/speakers name=max
         - http :8084/sessions name=maximum speakers=max
         - http :8083
@@ -177,12 +176,12 @@ jobs:
         - http :8080 || echo oops... might fail expected
         - http :8082/actuator/health
         - http :8081/actuator/health
-        - http :8080/actuator/health | jq '.'
+        - http :8080/actuator/health
         - http :8080 || echo oops... might fail expected
         #- http :8082
         #- http :8082/speakers name=max
         #- http :8082/speakers name=bax
-        #- http :8082/speakers | jq '.'
+        #- http :8082/speakers
         - stop_any 8082 8081 8080
     - stage: test
       jdk: openjdk11
