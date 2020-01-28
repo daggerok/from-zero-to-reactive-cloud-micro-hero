@@ -4,7 +4,6 @@ Using java spring-boot reactive webflux r2dbc docker compose docker swarm and k8
 ## Status
 IN PROGRESS
 
-## Done
 * ~~Configured Travis CI pipelines~~
 * ~~Initialized draft and implement of VuePress documentation~~
 * ~~Implemented step1 with sets of spring boot 2.2.o.RELEASE reactive applications~~
@@ -14,14 +13,8 @@ IN PROGRESS
 * ~~Implemented step5 with docker-compose maven plugin~~
 * ~~Implemented step6 and Dockerize all applications using jib maven plugin from Google~~
 * ~~Implemented step7 with docker-swarm~~
-
-<!--
-## In progress
--->
-
-## Road map
-* Implement step8 with k8s / k3s, rancher, open-shift, etc
-* Implement step9 with project riff
+* Implement step8 with k8s, jib + skaffold, helm-chart
+<!-- * Implement step9 with project riff -->
 
 ## Step 1
 Simple sets of applications implementation for local run

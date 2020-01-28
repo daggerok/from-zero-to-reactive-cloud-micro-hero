@@ -7,7 +7,7 @@
     <name>${project.artifactId}</name>
     <groupId>com.github.daggerok.hero</groupId>
     <artifactId>from-zero-to-reactive-cloud-micro-hero</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -29,6 +29,7 @@
         <module>step5-all-in-one-docker-compose</module>
         <module>step6-all-in-one-google-jib</module>
         <module>step7-all-in-one-docker-swarm</module>
+        <module>step8-all-in-one-jib-k8s-skaffold-helm-chart</module>
     </modules>
 
     <developers>
@@ -69,8 +70,8 @@
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
 
         <frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
-        <frontend-maven-plugin.npmVersion>6.11.3</frontend-maven-plugin.npmVersion>
-        <frontend-maven-plugin.nodeVersion>v12.11.1</frontend-maven-plugin.nodeVersion>
+        <frontend-maven-plugin.npmVersion>6.13.4</frontend-maven-plugin.npmVersion>
+        <frontend-maven-plugin.nodeVersion>v12.14.1</frontend-maven-plugin.nodeVersion>
 
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
@@ -80,7 +81,7 @@
         <docker-compose-maven-plugin.version>2.5.1</docker-compose-maven-plugin.version>
         <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
         <postgres.image>healthcheck/postgres:alpine</postgres.image>
-        <openjdk.image>openjdk:8u212-jre-alpine</openjdk.image>
+        <openjdk.image>openjdk:8u212-jre-alpine3.9</openjdk.image>
 
         <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
         <r2dbc-postgresql.version>0.8.0.RELEASE</r2dbc-postgresql.version>
