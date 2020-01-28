@@ -29,7 +29,7 @@
         <module>step5-all-in-one-docker-compose</module>
         <module>step6-all-in-one-google-jib</module>
         <module>step7-all-in-one-docker-swarm</module>
-        <module>step8-all-in-one-jib-k8s-skaffold-helm-chart</module>
+        <module>step8-all-in-one-skaffold-k8s-helm-chart</module>
     </modules>
 
     <developers>
