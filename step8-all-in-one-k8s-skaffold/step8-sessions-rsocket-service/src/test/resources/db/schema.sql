@@ -1,0 +1,7 @@
+CREATE SCHEMA IF NOT EXISTS public;
+DROP TABLE IF EXISTS sessions;
+CREATE TABLE sessions (
+    id UUID NOT NULL DEFAULT RANDOM_UUID(),
+    name     VARCHAR NOT NULL,
+    speakers VARCHAR NOT NULL
+);

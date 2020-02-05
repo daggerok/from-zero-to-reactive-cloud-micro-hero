@@ -154,7 +154,7 @@
                 <defaultGoal>docker:stop docker:remove</defaultGoal>
             </build>
         </profile>
-        <!-- mvn -pl step6-all-in-one-google-jib -P compose -->
+        <!-- mvn -pl step6-all-in-one-google-jib -P compose-compose -->
         <profile>
             <id>compose-create</id>
             <build>
@@ -181,14 +181,14 @@
                 </plugins>
             </build>
         </profile>
-        <!-- mvn -pl step6-all-in-one-google-jib -P up -->
+        <!-- mvn -pl step6-all-in-one-google-jib -P compose-up -->
         <profile>
             <id>compose-up</id>
             <build>
                 <defaultGoal>docker-compose:up</defaultGoal>
             </build>
         </profile>
-        <!-- mvn -pl step6-all-in-one-google-jib -P down -->
+        <!-- mvn -pl step6-all-in-one-google-jib -P compose-down -->
         <profile>
             <id>compose-down</id>
             <build>

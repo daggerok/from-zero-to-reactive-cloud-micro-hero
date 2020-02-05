@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      name: postgres
+      labels:
+        app: postgres
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: postgres
+          image: postgres:12.1-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+              name: postgres
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: postgres
+            initialDelaySeconds: 3
+            periodSeconds: 6
+            timeoutSeconds: 99
+          livenessProbe:
+            tcpSocket:
+              port: postgres
+            initialDelaySeconds: 9
+            periodSeconds: 18
+            timeoutSeconds: 99
+          env:
+            - name: POSTGRES_DB
+              value: "postgres"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      protocol: TCP
+      name: postgres
+      nodePort: 30432
+      targetPort: 5432
+  type: NodePort

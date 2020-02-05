@@ -1,0 +1,4 @@
+# git config --local include.path ../.gitconfig
+[core]
+        fileMode = false
+        autocrlf = input

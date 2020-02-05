@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: frontend
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: daggerok/step8-all-in-one-k8s-skaffold-step8-frontend
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SESSIONS_HOST
+              value: sessions
+            - name: SESSIONS_PORT
+              value: "8102"
+            - name: SPEAKERS_HOST
+              value: speakers
+            - name: SPEAKERS_PORT
+              value: "8103"
+          ports:
+            - containerPort: 8101
+              name: webflux-f
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: webflux-f
+            initialDelaySeconds: 3
+            periodSeconds: 6
+            timeoutSeconds: 99
+          livenessProbe:
+            tcpSocket:
+              port: webflux-f
+            initialDelaySeconds: 9
+            periodSeconds: 18
+            timeoutSeconds: 99
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 8101
+      protocol: TCP
+      name: webflux-f
+      nodePort: 30101
+      targetPort: 8101
+  type: NodePort

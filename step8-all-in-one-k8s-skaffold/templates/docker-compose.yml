@@ -1,0 +1,113 @@
+version: '2.1'
+networks:
+  ${project.artifactId}:
+    driver: bridge
+services:
+  postgres:
+    image: postgres:alpine
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+    ports: ['${postgres-port}:${postgres-port}']
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: ${postgres-host}
+      POSTGRES_PORT: ${postgres-port}
+    networks:
+      ${project.artifactId}:
+        aliases:
+          - ${postgres-host}
+          - ${postgres-host}.${project.artifactId}
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: pg_isready -h 127.0.0.1 -p $$POSTGRES_PORT -d $$POSTGRES_DB -U $$POSTGRES_USER
+  sessions:
+    image: ${docker-repository}/${project.artifactId}-${sessions-host}:${project.version}
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+    # volumes: ['./${sessions-host}/target:/tmp']
+    # entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['${sessions-port}:${sessions-port}']
+    environment:
+      SERVER_PORT: ${sessions-port}
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: ${postgres-host}
+      POSTGRES_PORT: ${postgres-port}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      ${project.artifactId}:
+        aliases:
+          - ${sessions-host}
+          - ${sessions-host}.${project.artifactId}
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  speakers:
+    image: ${docker-repository}/${project.artifactId}-${speakers-host}:${project.version}
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+    #volumes: ['./${speakers-host}/target:/tmp']
+    #entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['${speakers-port}:${speakers-port}']
+    environment:
+      SERVER_PORT: ${speakers-port}
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: ${postgres-host}
+      POSTGRES_PORT: ${postgres-port}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      ${project.artifactId}:
+        aliases:
+          - ${speakers-host}
+          - ${speakers-host}.${project.artifactId}
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  frontend:
+    image: ${docker-repository}/${project.artifactId}-${frontend-host}:${project.version}
+    labels:
+      MAINTAINER: Maksim Kostromin https://github.com/daggerok
+    #volumes: ['./${frontend-host}/target:/tmp']
+    #entrypoint: ash -c 'java -jar /tmp/*.jar'
+    ports: ['${frontend-port}:${frontend-port}']
+    environment:
+      SERVER_PORT: ${frontend-port}
+      SESSIONS_HOST: ${sessions-host}
+      SESSIONS_PORT: ${sessions-port}
+      SPEAKERS_HOST: ${speakers-host}
+      SPEAKERS_PORT: ${speakers-port}
+    depends_on:
+      sessions:
+        condition: service_healthy
+      speakers:
+        condition: service_healthy
+    networks:
+      ${project.artifactId}:
+        aliases:
+          - ${frontend-host}
+          - ${frontend-host}.${project.artifactId}
+    healthcheck:
+      retries: 15
+      timeout: 3s
+      interval: 3s
+      test: wget --quiet --tries=1 --spider http://127.0.0.1:$$SERVER_PORT/actuator/health || exit
+  healthcheck: # really, not needed, just for CI in our case...
+    image: busybox
+    depends_on:
+      frontend:
+        condition: service_healthy

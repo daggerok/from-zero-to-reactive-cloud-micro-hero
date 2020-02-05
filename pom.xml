@@ -29,7 +29,8 @@
         <module>step5-all-in-one-docker-compose</module>
         <module>step6-all-in-one-google-jib</module>
         <module>step7-all-in-one-docker-swarm</module>
-        <module>step8-all-in-one-skaffold-k8s-helm-chart</module>
+        <module>step8-all-in-one-k8s-skaffold</module>
+        <module>step9-all-in-one-k8s-helm</module>
     </modules>
 
     <developers>
@@ -84,8 +85,8 @@
         <openjdk.image>openjdk:8u212-jre-alpine3.9</openjdk.image>
 
         <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
-        <r2dbc-postgresql.version>0.8.0.RELEASE</r2dbc-postgresql.version>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+        <r2dbc.version>0.8.0.RELEASE</r2dbc.version>
 
         <webjars-locator.version>0.38</webjars-locator.version>
         <Semantic-UI.version>2.4.1</Semantic-UI.version>
@@ -103,7 +104,13 @@
             <dependency>
                 <groupId>io.r2dbc</groupId>
                 <artifactId>r2dbc-postgresql</artifactId>
-                <version>${r2dbc-postgresql.version}</version>
+                <version>${r2dbc.version}</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>io.r2dbc</groupId>
+                <artifactId>r2dbc-h2</artifactId>
+                <version>${r2dbc.version}</version>
                 <type>jar</type>
             </dependency>
 

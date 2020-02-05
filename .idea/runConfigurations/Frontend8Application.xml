@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Frontend8Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="step8-frontend" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.github.daggerok.hero.frontend.Frontend8Application" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

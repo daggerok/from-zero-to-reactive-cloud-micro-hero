@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: speackers
+  labels:
+    app: speackers
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: speackers
+      labels:
+        app: speackers
+    spec:
+      containers:
+        - name: speackers
+          image: daggerok/step8-all-in-one-k8s-skaffold-step8-speakers-rest-api-service
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: "postgres"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_HOST
+              value: "postgres"
+            - name: POSTGRES_PORT
+              value: "5432"
+          ports:
+            - containerPort: 8103
+              name: webflux-sp
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: webflux-sp
+            initialDelaySeconds: 3
+            periodSeconds: 6
+            timeoutSeconds: 99
+          livenessProbe:
+            tcpSocket:
+              port: webflux-sp
+            initialDelaySeconds: 9
+            periodSeconds: 18
+            timeoutSeconds: 99
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: speackers
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: speackers
+spec:
+  selector:
+    app: speackers
+  ports:
+    - port: 8103
+      protocol: TCP
+      nodePort: 30103
+      targetPort: 8103
+      name: webflux-sp
+  type: NodePort

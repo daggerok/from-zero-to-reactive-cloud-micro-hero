@@ -44,6 +44,22 @@ before_install:
   - python -m pip install --upgrade docker-compose httpie
 jobs:
   include:
+    #- stage: test
+    #  jdk: openjdk11
+    #  name: test step9
+    #  script:
+    #    - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step9-all-in-one-k8s-helm
+    - stage: test
+      jdk: openjdk11
+      name: test step8
+      before_script:
+        - cd $TRAVIS_BUILD_DIR && ./mvnw -f step8-all-in-one-k8s-skaffold
+        - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step8-all-in-one-k8s-skaffold -P compose-create
+        - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step8-all-in-one-k8s-skaffold -P compose-up
+      script:
+        - http :8101
+      after_script:
+        - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step8-all-in-one-k8s-skaffold -P compose-down
     - stage: test
       jdk: openjdk11
       name: test step7

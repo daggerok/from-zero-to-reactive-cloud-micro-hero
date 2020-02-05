@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sessions
+  labels:
+    app: sessions
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: sessions
+      labels:
+        app: sessions
+    spec:
+      containers:
+        - name: sessions
+          image: daggerok/step8-all-in-one-k8s-skaffold-step8-sessions-rsocket-service
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: "postgres"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_HOST
+              value: "postgres"
+            - name: POSTGRES_PORT
+              value: "5432"
+          ports:
+            - containerPort: 8102
+              name: r-socket-se
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: r-socket-se
+            initialDelaySeconds: 3
+            periodSeconds: 6
+            timeoutSeconds: 99
+          livenessProbe:
+            tcpSocket:
+              port: r-socket-se
+            initialDelaySeconds: 9
+            periodSeconds: 18
+            timeoutSeconds: 99
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: sessions
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sessions
+spec:
+  selector:
+    app: sessions
+  ports:
+    - port: 8102
+      protocol: TCP
+      nodePort: 30102
+      targetPort: 8102
+      name: r-socket-se
+  type: NodePort

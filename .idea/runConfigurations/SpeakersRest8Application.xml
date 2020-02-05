@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SpeakersRest8Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="step8-speakers-rest-api-service" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.github.daggerok.hero.rest.SpeakersRest8Application" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
