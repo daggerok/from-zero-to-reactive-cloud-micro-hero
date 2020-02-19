@@ -78,7 +78,7 @@
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
-        <jib-maven-plugin.version>1.7.0</jib-maven-plugin.version>
+        <jib-maven-plugin.version>1.8.0</jib-maven-plugin.version>
         <docker-compose-maven-plugin.version>2.5.1</docker-compose-maven-plugin.version>
         <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
         <postgres.image>healthcheck/postgres:alpine</postgres.image>

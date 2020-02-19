@@ -6,10 +6,10 @@ notifications:
 git:
   quiet: true
   depth: false
+language: java
 jdk: openjdk11
 node_js: lts/*
-language: python
-python: 3.8
+python: 3.7
 os: linux
 arch: amd64
 addons:
@@ -19,8 +19,11 @@ addons:
       - bash
       - curl
       - tree
+      - httpie
       - docker-ce
+      - python3-dev
       - libxml2-utils
+      - docker-compose
       - libappindicator1
       - fonts-liberation
       - google-chrome-stable
@@ -39,9 +42,6 @@ before_install:
     fi
     source ${HOME}/.local/daggerok/bash-functions/master/main.bash ;
   - stop_any 80 5432 8080
-  #
-  - python -m pip install --upgrade pip setuptools pyopenssl
-  - python -m pip install --upgrade docker-compose httpie
 jobs:
   include:
     #- stage: test
@@ -55,9 +55,13 @@ jobs:
       before_script:
         - cd $TRAVIS_BUILD_DIR && ./mvnw -f step8-all-in-one-k8s-skaffold
         - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step8-all-in-one-k8s-skaffold -P compose-create
+        - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step8-all-in-one-k8s-skaffold -P compose-down
         - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step8-all-in-one-k8s-skaffold -P compose-up
       script:
-        - http :8101
+        - http :8101/actuator
+        - http :8102/actuator
+        - http :8103/actuator
+        - echo TODO...
       after_script:
         - cd $TRAVIS_BUILD_DIR && ./mvnw -pl :step8-all-in-one-k8s-skaffold -P compose-down
     - stage: test
@@ -233,10 +237,9 @@ jobs:
           condition: "$TRAVIS_PULL_REQUEST = false"
 cache:
   npm: true
-  pip: true
   packages: true
   directories:
-    #- ~/.m2
+    - ~/.m2
     - ~/.docker
     - ~/.local/daggerok
     - .vuepress/node_modules

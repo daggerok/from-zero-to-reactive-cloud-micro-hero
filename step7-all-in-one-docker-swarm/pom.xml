@@ -51,7 +51,7 @@
                         <containerizingMode>packaged</containerizingMode>
                         <container>
                             <appRoot>/tmp</appRoot>
-                            <useCurrentTimestamp>true</useCurrentTimestamp>
+                            <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                             <entrypoint>
                                 <shell>ash</shell>
                                 <option>-c</option>
