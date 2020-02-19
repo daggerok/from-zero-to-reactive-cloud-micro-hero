@@ -84,7 +84,7 @@
         <postgres.image>healthcheck/postgres:alpine</postgres.image>
         <openjdk.image>openjdk:8u212-jre-alpine3.9</openjdk.image>
 
-        <spring-boot-starter-data-r2dbc.version>0.1.0.BUILD-SNAPSHOT</spring-boot-starter-data-r2dbc.version>
+        <spring-boot-starter-data-r2dbc.version>0.1.0.M3</spring-boot-starter-data-r2dbc.version>
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <r2dbc.version>0.8.0.RELEASE</r2dbc.version>
 

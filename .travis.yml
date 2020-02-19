@@ -236,7 +236,7 @@ cache:
   pip: true
   packages: true
   directories:
-    - ~/.m2
+    #- ~/.m2
     - ~/.docker
     - ~/.local/daggerok
     - .vuepress/node_modules
